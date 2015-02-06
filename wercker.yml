@@ -25,4 +25,4 @@ deploy:
     - script:
         name: Use distribution ignore file
         code: rm .gitignore && mv .distignore .gitignore
-    - dfurnes/git-tag-version@0.0.1
+    - dfurnes/git-tag-version
