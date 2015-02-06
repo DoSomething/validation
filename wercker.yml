@@ -25,8 +25,4 @@ deploy:
     - script:
         name: Use distribution ignore file
         code: rm .gitignore && mv .distignore .gitignore
-    - script:
-        name: Tag new release
-        code: |
-          chmod +x deploy.sh
-          ./deploy.sh
+    - dfurnes/git-tag-version@0.0.1
