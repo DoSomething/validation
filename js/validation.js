@@ -347,7 +347,8 @@ define(function(require) {
     registerValidationFunction: registerValidationFunction,
     validateField: validateField,
     showValidationMessage: showValidationMessage,
-    Validations: validations
+    Validations: validations,
+    Events: Events
   };
 
   return window.DS.Validation;
