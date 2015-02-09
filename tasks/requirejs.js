@@ -3,7 +3,7 @@ module.exports = {
     options: {
       baseUrl: "js",
       name: "../bower_components/almond/almond",
-      include: "main",
+      include: "validation",
       out: "dist/validation.js",
       optimize: "none",
       findNestedDependencies: true,

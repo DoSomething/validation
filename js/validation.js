@@ -15,11 +15,11 @@
  * - If adding input fields to the DOM after load, run `prepareFields`
  */
 
-define("main", function(require) {
+define(function(require) {
   "use strict";
 
   var $ = window.jQuery;
-  var Events = require("events");
+  var Events = require("./events");
   var validations = [];
 
   /**
@@ -340,7 +340,8 @@ define("main", function(require) {
   });
 
   // Attach to namespaced window object
-  return {
+  window.DS = window.DS || {};
+  window.DS.Validation = {
     prepareFields: prepareFields,
     registerValidation: registerValidation,
     registerValidationFunction: registerValidationFunction,
@@ -348,4 +349,6 @@ define("main", function(require) {
     showValidationMessage: showValidationMessage,
     Validations: validations
   };
+
+  return window.DS.Validation;
 });
