@@ -2,14 +2,9 @@ box: wercker/nodejs
 
 build:
   steps:
-    - script:
-        name: Install Bower components
-        code: |
-          export BOWER_STORAGE__CACHE="${WERCKER_CACHE_DIR}/wercker/bower"
-          mkdir -p $BOWER_STORAGE__CACHE
-          npm install bower
-          ./node_modules/bower/bin/bower install
     - npm-install
+    - grunt:
+        tasks: build
     - npm-test
 
 deploy:
