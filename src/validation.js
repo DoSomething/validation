@@ -1,5 +1,5 @@
-import Events from "./events";
 import $ from 'jquery';
+import Events from 'eventemitter3';
 import { isFormField } from './util';
 
 /**

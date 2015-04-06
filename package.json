@@ -15,6 +15,7 @@
     "test": "grunt test"
   },
   "dependencies": {
+    "eventemitter3": "^0.1.6",
     "jquery": "^1.11.0"
   },
   "devDependencies": {
