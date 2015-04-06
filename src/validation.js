@@ -1,35 +1,12 @@
-/**
- * Client-side form validation logic. Form element is validated based
- * on `data-validate` attribute, and validation output is placed in
- * corresponding `<label>`.
- *
- * Validations can be added later by extending `NEUE.Validation.Validations`.
- * Validators can be added later by extending `NEUE.Validation.Validators`.
- *
- * finished validating with a boolean `success` and a plain-text `message`
- * value. (Alternatively, a `suggestion` value can be passed which will
- * prompt the user "Did you mean {suggestion}?".
- *
- * ## Usage Notes:
- * - Input field must have `data-validate` attribute.
- * - If adding input fields to the DOM after load, run `prepareFields`
- */
-
-import $ from "jquery";
 import Events from "./events";
-var validations = [];
-
+import $ from 'jquery';
+import { isFormField } from './util';
 
 /**
- * Returns whether element is <input>, <select>, or <textarea>.
- * @param {jQuery} $el  Element to check type of.
- * @return {boolean}
+ * Array of registered validation functions.
+ * @type {Array}
  */
-var isFormField = function($el) {
-  var tag = $el.prop("tagName");
-  return ( tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA" );
-};
-
+var validations = [];
 
 /**
  * Show validation message in markup.
@@ -37,29 +14,29 @@ var isFormField = function($el) {
  * @param {jQuery} $field              Field to display validation message for.
  * @param {Object} result              Object containing `success` and either `message` or `suggestion`
  */
-var showValidationMessage = function($field, result) {
-  var $fieldLabel = $("label[for='" + $field.attr("id") + "']");
-  var $fieldValidation = $fieldLabel.find(".validation");
-  var $fieldMessage = $fieldValidation.find(".validation__message");
+function showValidationMessage($field, result) {
+  var $fieldLabel = $(`label[for='${$field.attr('id')}']`);
+  var $fieldValidation = $fieldLabel.find('.validation');
+  var $fieldMessage = $fieldValidation.find('.validation__message');
   var fieldLabelHeight = $fieldLabel.height();
   var fieldMessageHeight;
 
-  $field.removeClass("has-success has-error has-warning shake");
-  $fieldMessage.removeClass("has-success has-error has-warning");
+  $field.removeClass('has-success has-error has-warning shake');
+  $fieldMessage.removeClass('has-success has-error has-warning');
 
   // Highlight/animate field
   if(result.success === true) {
-    $field.addClass("has-success");
-    $fieldMessage.addClass("has-success");
+    $field.addClass('has-success');
+    $fieldMessage.addClass('has-success');
   } else {
-    $field.addClass("has-error");
-    $fieldMessage.addClass("has-error");
+    $field.addClass('has-error');
+    $fieldMessage.addClass('has-error');
 
     if( isFormField($field) ) {
-      $field.addClass("shake");
+      $field.addClass('shake');
     }
 
-    Events.publish("Validation:InlineError", $fieldLabel.attr("for"));
+    Events.emit('Validation:InlineError', $fieldLabel.attr('for'));
   }
 
   // Show validation message
@@ -68,43 +45,43 @@ var showValidationMessage = function($field, result) {
   }
 
   if(result.suggestion) {
-    $fieldMessage.html("Did you mean " + result.suggestion.full + "? <a href='#' data-suggestion='" + result.suggestion.full + "'class='js-mailcheck-fix'>Fix it!</a>");
-    Events.publish("Validation:Suggestion", result.suggestion.domain);
+    $fieldMessage.html(`Did you mean ${result.suggestion.full}? <a href='#' data-suggestion='${result.suggestion.full}' class='js-mailcheck-fix'>Fix it!</a>`);
+    Events.emit('Validation:Suggestion', result.suggestion.domain);
   }
 
   fieldMessageHeight = $fieldMessage.height();
 
   // Set label height if it needs to be multiline.
   if(fieldMessageHeight > fieldLabelHeight) {
-    $fieldLabel.css("height", fieldMessageHeight + "px");
+    $fieldLabel.css('height', fieldMessageHeight + 'px');
   } else {
     // Clear previous multiline height if no longer needed.
-    $fieldLabel.css("height", "");
+    $fieldLabel.css('height', '');
   }
 
   // Animate in the validation message
-  $fieldValidation.addClass("is-showing-message");
+  $fieldValidation.addClass('is-showing-message');
 
-  $(".js-mailcheck-fix").on("click", function(e) {
+  $('.js-mailcheck-fix').on('click', function(e) {
     e.preventDefault();
 
-    var $field = $("#" + $(this).closest("label").attr("for"));
-    $field.val($(this).data("suggestion"));
-    $field.trigger("blur");
+    var $field = $('#' + $(this).closest('label').attr('for'));
+    $field.val($(this).data('suggestion'));
+    $field.trigger('blur');
 
     // If Google Analytics is set up, we fire an event to
     // mark that a suggestion has been made
-    Events.publish("Validation:SuggestionUsed", $(this).text() );
+    Events.emit('Validation:SuggestionUsed', $(this).text() );
   });
 
-  $field.on("focus", function() {
-    $field.removeClass("has-warning has-error has-success shake");
-    $fieldValidation.removeClass("is-showing-message");
-    $fieldLabel.css("height", "");
+  $field.on('focus', function() {
+    $field.removeClass('has-warning has-error has-success shake');
+    $fieldValidation.removeClass('is-showing-message');
+    $fieldLabel.css('height', '');
   });
 
   return result.success;
-};
+}
 
 
 /**
@@ -113,25 +90,18 @@ var showValidationMessage = function($field, result) {
  * @param {jQuery}   [force = false]                   Force validation (even on empty fields).
  * @param {function} [callback=showValidationMessage]  Callback function that receives validation result
  */
-var validateField = function($field, force, callback) {
-  // Default arguments
-  force = typeof force !== "undefined" ? force : false;
-  callback = typeof callback !== "undefined" ? callback : function($field, result) {
-    showValidationMessage($field, result);
-  };
-
-  var validation = $field.data("validate");
+function validateField($field, force = false, callback = showValidationMessage) {
+  var validation = $field.data('validate');
 
   // Trigger any other linked validation
-  var validationTrigger = $field.data("validate-trigger");
+  var validationTrigger = $field.data('validate-trigger');
   if(validationTrigger) {
     validateField( $(validationTrigger) );
   }
 
-
   // Don't validate if validation doesn't exist
   if(!validations[validation]) {
-    console.error("A validation with the name "+ validation + " has not been registered.");
+    console.error(`A validation with the name ${validation} has not been registered.`);
     return;
   }
 
@@ -142,9 +112,9 @@ var validateField = function($field, force, callback) {
     var fieldValue = $field.val();
 
     // Finally, let's not validate blank fields unless forced to
-    if(force || fieldValue !== "") {
-      if(validation === "match") {
-        var matchFieldValue = $($field.data("validate-match")).val();
+    if(force || fieldValue !== '') {
+      if(validation === 'match') {
+        var matchFieldValue = $($field.data('validate-match')).val();
         validations[validation].fn(fieldValue, matchFieldValue, function(result) {
           callback($field, result);
         });
@@ -156,8 +126,8 @@ var validateField = function($field, force, callback) {
     }
   } else {
     // For all other tags, we pass the element directly
-    if(validation === "match") {
-      var $matchField = $($field.data("validate-match"));
+    if(validation === 'match') {
+      var $matchField = $($field.data('validate-match'));
       validations[validation].fn($field, $matchField, function(result) {
         callback($field, result);
       });
@@ -167,41 +137,41 @@ var validateField = function($field, force, callback) {
       });
     }
   }
-};
+}
 
 
 /**
  * Prepare field label DOM to display validation messages.
  * @param {jQuery} $label Label element to prepare.
  */
-var prepareLabel = function($label) {
+function prepareLabel($label) {
   // Check to make sure we haven't already prepared this before
-  if($label.find(".validation").length === 0) {
-    var $innerLabel = $("<div class='validation'></div>");
-    $innerLabel.append("<div class='validation__label'>" + $label.html() + "</div>");
-    $innerLabel.append("<div class='validation__message'></div>");
+  if($label.find('.validation').length === 0) {
+    var $innerLabel = $(`<div class='validation'></div>`);
+    $innerLabel.append(`<div class='validation__label'>${$label.html()}</div>`);
+    $innerLabel.append(`<div class='validation__message'></div>`);
 
     $label.html($innerLabel);
   }
-};
+}
 
 
 /**
  * Prepares form label DOM to display validation messages & register event handler
  * @param {jQuery} $fields Fields to register validation handlers to.
  */
-var prepareFields = function($fields) {
+function prepareFields($fields) {
   $fields.each(function() {
     var $field = $(this);
 
-    prepareLabel( $("label[for='" + $field.attr("id") + "']") );
+    prepareLabel($(`label[for="${$field.attr('id')}"]`));
 
-    $field.on("blur", function(event) {
+    $field.on('blur', function(event) {
       event.preventDefault();
       validateField( $field );
     });
   });
-};
+}
 
 
 /**
@@ -211,58 +181,58 @@ var prepareFields = function($fields) {
  * @param {Object}    validation        Collection of validation rules to apply
  * @param {Function}  [validation.fn]   Custom validation
  */
-var registerValidation = function(name, validation) {
+function registerValidation(name, validation) {
   if(validations[name]) {
-    throw "A validation function with that name has already been registered";
+    throw 'A validation function with that name has already been registered';
   }
 
   validations[name] = validation;
-};
+}
 
 
 /**
  * @DEPRECATED: Will be removed in a future version in favor of `registerValidation`.
  */
-var registerValidationFunction = function(name, func) {
+function registerValidationFunction(name, func) {
   var v = {
     fn: func
   };
 
   registerValidation(name, v);
-};
+}
 
 
 /**
  * Disable form submission.
  * @param {jQuery} $form Form to disable submission for.
  */
-var disableFormSubmit = function($form) {
+function disableFormSubmit($form) {
   // Prevent double-submissions
-  var $submitButton = $form.find(":submit");
+  var $submitButton = $form.find(':submit');
 
   // Disable that guy
-  $submitButton.attr("disabled", true);
-  $submitButton.addClass("is-loading");
-};
+  $submitButton.attr('disabled', true);
+  $submitButton.addClass('is-loading');
+}
 
 
 /**
  * Re-enable form submission.
  * @param {jQuery} $form Form to enable submission for.
  */
-var enableFormSubmit = function($form) {
-  var $submitButton = $form.find(":submit");
-  $submitButton.attr("disabled", false);
-  $submitButton.removeClass("is-loading is-disabled");
-};
+function enableFormSubmit($form) {
+  var $submitButton = $form.find(':submit');
+  $submitButton.attr('disabled', false);
+  $submitButton.removeClass('is-loading is-disabled');
+}
 
 
 /**
  * Validate form on submit.
  */
-$("body").on("submit", "form", function(event, isValidated) {
+$('body').on('submit', 'form', function(event, isValidated) {
   var $form = $(this);
-  var $validationFields = $form.find("[data-validate]");
+  var $validationFields = $form.find('[data-validate]');
 
   // Disable form submission to prevent double-clicks.
   disableFormSubmit($form);
@@ -270,7 +240,7 @@ $("body").on("submit", "form", function(event, isValidated) {
   // We want to validate all [data-validate] field that are either required, or have user input.
   $validationFields = $validationFields.map(function() {
     var $this = $(this);
-    if(typeof $this.attr("data-validate-required") !== "undefined" || $this.val() !== "") {
+    if(typeof $this.attr('data-validate-required') !== 'undefined' || $this.val() !== '') {
       return $this;
     }
   });
@@ -303,17 +273,17 @@ $("body").on("submit", "form", function(event, isValidated) {
         // If this is the first error in the form, scroll to it.
         if(!scrolledToError && result.success === false) {
           scrolledToError = true;
-          $("html,body").animate({scrollTop: $field.offset().top - 32}, 200);
+          $('html,body').animate({scrollTop: $field.offset().top - 32}, 200);
         }
 
         // Once we're done validating all fields, check status of form
         if(validatedFields === $validationFields.length) {
           if(validatedResults === $validationFields.length) {
             // we've validated all that can be validated
-            Events.publish("Validation:Submitted", $(this).attr("id") );
-            $form.trigger("submit", true);
+            Events.emit('Validation:Submitted', $(this).attr('id') );
+            $form.trigger('submit', true);
           } else {
-            Events.publish("Validation:SubmitError", $(this).attr("id") );
+            Events.emit('Validation:SubmitError', $(this).attr('id') );
             enableFormSubmit($form);
           }
         }
@@ -325,33 +295,33 @@ $("body").on("submit", "form", function(event, isValidated) {
 });
 
 
-// Register the "match" validation.
-registerValidationFunction("match", function(string, secondString, done) {
-  if(string === secondString && string !== "") {
+// Register the 'match' validation.
+registerValidationFunction('match', function(string, secondString, done) {
+  if(string === secondString && string !== '') {
     return done({
       success: true,
-      message: "Looks good!"
+      message: 'Looks good!'
     });
   } else {
     return done({
       success: false,
-      message: "That doesn't match."
+      message: 'That doesn\'t match.'
     });
   }
 });
 
 $(function() {
   // Prepare the labels on any `[data-validate]` fields in the DOM at load
-  prepareFields( $("body").find("[data-validate]") );
+  prepareFields( $('body').find('[data-validate]') );
 });
 
 // Export public API:
 export default {
-  prepareFields: prepareFields,
-  registerValidation: registerValidation,
-  registerValidationFunction: registerValidationFunction,
-  validateField: validateField,
-  showValidationMessage: showValidationMessage,
+  prepareFields,
+  registerValidation,
+  registerValidationFunction,
+  validateField,
+  showValidationMessage,
   Validations: validations,
   Events: Events
 };
