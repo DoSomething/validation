@@ -23,14 +23,14 @@
 
   // ## Name
   // Greets the user when they enter their name.
-  window.DS.Validation.registerValidationFunction("name", function(string, done) {
+  DSValidation.registerValidationFunction("name", function(string, done) {
     validateNotBlank(string, done,
       "Hey, " + string + "!",
       "We need your first name."
     );
   });
 
-  window.DS.Validation.registerValidationFunction("last_name", function(string, done) {
+  DSValidation.registerValidationFunction("last_name", function(string, done) {
     validateNotBlank(string, done,
       "Got it, " + string + "!",
       "We need your last name."
@@ -39,7 +39,7 @@
 
   // ## Birthday
   // Validates correct date input, reasonable birthdate, and says a nice message.
-  window.DS.Validation.registerValidationFunction("birthday", function(string, done) {
+  DSValidation.registerValidationFunction("birthday", function(string, done) {
     var birthday, birthMonth, birthDay, birthYear, format;
 
     // Parse date from string
