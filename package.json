@@ -16,7 +16,8 @@
   },
   "dependencies": {
     "eventemitter3": "^0.1.6",
-    "jquery": "^1.11.0"
+    "jquery": "^1.11.0",
+    "lodash": "^3.6.0"
   },
   "devDependencies": {
     "autoprefixer-core": "^4.0.2",
@@ -25,6 +26,7 @@
     "babel-loader": "^5.0.0",
     "css-mqpacker": "^2.0.0",
     "dosomething-neue": "~6.4.0",
+    "es6-promise": "^2.0.1",
     "grunt": "^0.4.0",
     "grunt-bump": "^0.0.14",
     "grunt-cli": "^0.1.13",

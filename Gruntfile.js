@@ -91,7 +91,7 @@ module.exports = function(grunt) {
      */
     webpack: {
       options: {
-        entry: './src/validation.js',
+        entry: './src/index.js',
         output: {
           filename: 'dist/validation.js',
           library: 'DSValidation',

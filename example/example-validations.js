@@ -4,42 +4,60 @@
 (function() {
   "use strict";
 
-  // @TODO: This will be removed when Validation gets refactored.
-  function validateNotBlank(string, done, success, failure) {
-    if( string !== "" ) {
-      return done({
-        success: true,
-        message: success
+  // # Add validation functions...
+  DSValidation.registerValidation('match', function(value, options, accept, reject) {
+    if(value === options.matchValue && value !== '') {
+      return accept({
+        message: 'Looks good!'
       });
     } else {
-      return done({
-        success: false,
-        message: failure
+      return reject({
+        message: 'That doesn\'t match.'
       });
     }
-  }
-
-  // # Add validation functions...
+  });
 
   // ## Name
   // Greets the user when they enter their name.
-  DSValidation.registerValidationFunction("name", function(string, done) {
-    validateNotBlank(string, done,
-      "Hey, " + string + "!",
-      "We need your first name."
-    );
+  DSValidation.registerValidation("required", function(string, options, accept, reject) {
+    if( string !== "" ) {
+      return accept({
+        message: 'Looks good!'
+      });
+    } else {
+      return reject({
+        message: 'This field is required.'
+      });
+    }
   });
 
-  DSValidation.registerValidationFunction("last_name", function(string, done) {
-    validateNotBlank(string, done,
-      "Got it, " + string + "!",
-      "We need your last name."
-    );
+  DSValidation.registerValidation("min", function(value, params, accept, reject) {
+    if(parseInt(value) >= params) {
+      return accept({
+        message: 'Great!'
+      });
+    } else {
+      return reject({
+        message: 'Value must be greater than ' + params + '.'
+      });
+    }
+  });
+
+  DSValidation.registerValidation("max", function(value, params, accept, reject) {
+    if(parseInt(value) <= params) {
+      return accept({
+        message: 'Great!'
+      });
+    } else {
+      return reject({
+        message: 'Value must be less than ' + params + '.'
+      });
+    }
   });
 
   // ## Birthday
   // Validates correct date input, reasonable birthdate, and says a nice message.
-  DSValidation.registerValidationFunction("birthday", function(string, done) {
+  DSValidation.registerValidation("birthday", function(string, options, accept, reject) {
     var birthday, birthMonth, birthDay, birthYear, format;
 
     // Parse date from string
@@ -50,16 +68,14 @@
       birthDay = parseInt(birthday[1]);
       birthYear = parseInt(birthday[2]);
     } else {
-      return done({
-        success: false,
+      return reject({
         message: "Enter your birthday MM/DD/YYYY!"
       });
     }
 
     // fail if incorrect month
     if (birthMonth > 12 || birthMonth === 0) {
-      return done({
-        success: false,
+      return reject({
         message: "That doesn't seem right."
       });
     }
@@ -72,8 +88,7 @@
 
     // fail if incorrect day
     if (birthDay > endDates[birthMonth]) {
-      return done({
-        success: false,
+      return reject({
         message: "That doesn't seem right."
       });
     }
@@ -89,42 +104,35 @@
     }
 
     if (age < 0)  {
-      return done({
-        success: false,
+      return reject({
         message: "Are you a time traveller?"
       });
     } else if( age > 0 && age <= 25  ) {
 
       if (birthDate.getMonth() === now.getMonth() && now.getDate() === birthDate.getDate() ) {
-        return done({
-          success: true,
+        return accept({
           message: "Wow, happy birthday!"
         });
       } else if ( age < 10) {
-        return done({
-          success: true,
+        return accept({
           message: "Wow, you're " + age + "!"
         });
       } else {
-        return done({
-          success: true,
+        return accept({
           message: "Cool, " + age + "!"
         });
       }
 
     } else if (age > 25 && age < 130) {
-      return done({
-        success: true,
+      return accept({
         message: "Got it!"
       });
     } else if (string === "") {
-      return done({
-        success: false,
+      return reject({
         message: "We need your birthday."
       });
     } else {
-      return done({
-        success: false,
+      return reject({
         message: "That doesn't seem right."
       });
     }
