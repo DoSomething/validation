@@ -310,10 +310,10 @@ $("body").on("submit", "form", function(event, isValidated) {
         if(validatedFields === $validationFields.length) {
           if(validatedResults === $validationFields.length) {
             // we've validated all that can be validated
-            Events.publish("Validation:Submitted", $(this).attr("id") );
+            Events.publish("Validation:Submitted", $form.attr("id") );
             $form.trigger("submit", true);
           } else {
-            Events.publish("Validation:SubmitError", $(this).attr("id") );
+            Events.publish("Validation:SubmitError", $form.attr("id") );
             enableFormSubmit($form);
           }
         }
