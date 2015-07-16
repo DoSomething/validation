@@ -21,6 +21,5 @@ export default {
    */
   on: Core.on,
   once: Core.once,
-  removeListener: Core.removeListener
-
+  removeListener: Core.removeListener,
 };

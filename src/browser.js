@@ -1,11 +1,13 @@
+/* eslint-disable */
+
 import $ from 'jquery';
 import Core from './core';
 
 
 /**
- * Returns whether element is <input>, <select>, or <textarea>.
+ * Check whether element is <input>, <select>, or <textarea>.
  * @param {jQuery} $el  Element to check type of.
- * @return {boolean}
+ * @returns {boolean}
  */
 function isFormField($el) {
   const tag = $el.prop('tagName');
@@ -42,8 +44,7 @@ function showValidationMessage($field, result) {
     if (isFormField($field)) {
       $field.addClass('shake');
     }
-
-    //Events.emit('Validation:InlineError', $fieldLabel.attr('for'));
+    // Events.emit('Validation:InlineError', $fieldLabel.attr('for'));
   }
 
   // Show validation message
@@ -53,13 +54,13 @@ function showValidationMessage($field, result) {
 
   if (result.suggestion) {
     $fieldMessage.html(`Did you mean ${result.suggestion.full}? <a href='#' data-suggestion='${result.suggestion.full}' class='js-mailcheck-fix'>Fix it!</a>`);
-    //Events.emit('Validation:Suggestion', result.suggestion.domain);
+    // Events.emit('Validation:Suggestion', result.suggestion.domain);
   }
 
   fieldMessageHeight = $fieldMessage.height();
 
   // Set label height if it needs to be multiline.
-  if(fieldMessageHeight > fieldLabelHeight) {
+  if (fieldMessageHeight > fieldLabelHeight) {
     $fieldLabel.css('height', fieldMessageHeight + 'px');
   } else {
     // Clear previous multiline height if no longer needed.

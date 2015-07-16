@@ -18,19 +18,6 @@ module.exports = function(grunt) {
     },
 
     /**
-     * Bump version numbers in `package.json` and `bower.json`,
-     * and make a version commit marker. Used by CI script.
-     */
-    bump: {
-      options: {
-        files: ["package.json"],
-        commitFiles: ["package.json"],
-        push: false,
-        createTag: false
-      }
-    },
-
-    /**
      * Pre-process CSS with LibSass.
      */
     sass: {
@@ -119,6 +106,13 @@ module.exports = function(grunt) {
           new webpack.DefinePlugin({
             DEBUG: false,
             PRODUCTION: true
+          }),
+          new webpack.optimize.UglifyJsPlugin({
+            compress: {
+              drop_console: true,
+              drop_debugger: true,
+              dead_code: true
+            }
           })
         ]
       },
@@ -132,25 +126,6 @@ module.exports = function(grunt) {
             PRODUCTION: false
           })
         ]
-      }
-    },
-
-    /**
-     * Uglify JavaScript with UglifyJS2.
-     */
-    uglify: {
-      // On production builds, we should minify and drop
-      // dead code, `debugger`, and `console.log` statements.
-      prod: {
-        files: { 'dist/validation.js': ['dist/validation.js'] },
-        options: {
-          compress: {
-            drop_console: true,
-            drop_debugger: true,
-            dead_code: true
-          }
-        }
-
       }
     },
 
@@ -184,9 +159,9 @@ module.exports = function(grunt) {
     },
 
     /**
-     * Lint JavaScript using JSHint.
+     * Lint JavaScript using ESLint.
      */
-    jshint: {
+    eslint: {
       options: {
         force: true,
         jshintrc: true,
@@ -194,8 +169,6 @@ module.exports = function(grunt) {
       },
       all: [
         "src/**/*.js",
-        "tests/**/*.js",
-        "!tests/lib/**/*.js"
       ]
     },
 
@@ -216,7 +189,7 @@ module.exports = function(grunt) {
       },
       js: {
         files: ["src/**/*.js"],
-        tasks: ["webpack:debug", "jshint", "qunit"]
+        tasks: ["webpack:debug", "eslint", "qunit"]
       }
     }
   });
@@ -231,7 +204,7 @@ module.exports = function(grunt) {
 
   // > grunt build
   // Build for production.
-  grunt.registerTask('build', ['clean:dist', 'sass:prod', 'postcss:prod', 'webpack:prod', 'uglify:prod', 'modernizr:all']);
+  grunt.registerTask('build', ['clean:dist', 'sass:prod', 'postcss:prod', 'webpack:prod', 'modernizr:all']);
 
   // > grunt build:debug
   // Build for development.
@@ -239,7 +212,7 @@ module.exports = function(grunt) {
 
   // > grunt test
   // Run included unit tests and linters.
-  grunt.registerTask('test', ['jshint', 'qunit']);
+  grunt.registerTask('test', ['eslint', 'qunit']);
 
 };
 

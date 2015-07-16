@@ -1,49 +1,47 @@
 import keysIn from 'lodash/object/keysIn';
 import map from 'lodash/collection/map';
 import isString from 'lodash/lang/isString';
-//import Events from 'eventemitter3';
-
 
 /**
  * Array of registered validation functions.
  * @type {Object}
  */
-let validations = {};
-
+const validations = {};
 
 /**
  * Return whether or not a validation exists.
- * @param name
- * @returns {boolean}
+ * @param {string} name - Name of validation function
+ * @returns {boolean} - Validation exists
  */
 function hasValidation(name) {
   return validations.hasOwnProperty(name);
 }
 
-
 /**
  * Register a new validation function.
- * @param name Name of validation function
- * @param fn Function, with name, value, options, and callback parameters
+ * @param {string} name - Name of validation function
+ * @param {function} fn - Function, with name, value, options, and callback parameters
  */
 function registerValidation(name, fn) {
-  if(hasValidation(name)) {
+  if (hasValidation(name)) {
     throw `A validation function called '${name}' has already been registered.`;
   }
 
   validations[name] = fn;
 }
 
-
 /**
  * Return a promise for the given validation.
- * @returns {Promise}
+ * @param {string} value - Value to be validated
+ * @param {string} rule - Name of validation rule
+ * @param {array} params - (Optional) parameters for validation rule
+ * @returns {Promise} - Validation
  */
 function getPromise(value, rule, params) {
   return new Promise(function(resolve, reject) {
-    if(!hasValidation(rule)) {
+    if (!hasValidation(rule)) {
       reject({
-        message: `Validation rule '${rule}' does not exist.`
+        message: `Validation rule '${rule}' does not exist.`,
       });
     }
 
@@ -53,31 +51,31 @@ function getPromise(value, rule, params) {
 
 /**
  * Convert a set of rules (and optional params) from a string to an array.
+ * @param {string} rules - Pipe-separated rules, with optional parameters after ':'
+ * @returns {object} Parsed rule name & parameters
  */
 function parseRules(rules) {
   return rules.split('|').map(function(rule) {
-    let [ruleName, ruleParams] = rule.split(':', 2);
+    const [ruleName, ruleParams] = rule.split(':', 2);
     return {
       name: ruleName,
-      param: ruleParams
+      param: ruleParams,
     };
   });
 }
 
-
 /**
  * Returns a promise to validate a given field.
- * @param value
- * @param rules
+ * @param {string} value  - Value to be validated
+ * @param {string|array} rules - Rules to use for validatation
+ * @returns {Promise} Promise to validate given field
  */
 function validate(value, rules) {
   // Convert `rules` to array, if necessary
-  if(isString(rules)) {
-    rules = parseRules(rules);
-  }
+  const parsedRules = isString(rules) ? parseRules(rules) : rules;
 
   // Create a promise for each validation rule
-  let promises = map(rules, function(rule) {
+  const promises = map(parsedRules, function(rule) {
     return getPromise(value, rule.name, rule.param);
   });
 
@@ -87,11 +85,12 @@ function validate(value, rules) {
 
 /**
  * Returns a promise to validate all fields in a given form.
- * @param {Object} form - Object containing field names, rules, and their values
- * @param [validateBlank=false] - Should blank fields be validated?
+ * @param {object} form - Object containing field names, rules, and their values
+ * @param {boolean} [validateBlank=false] - Should blank fields be validated?
+ * @returns {Promise} Promise to validate given fields
  */
 function validateAll(form, validateBlank = false) {
-  let accumulator = [];
+  const accumulator = [];
   let ready = Promise.resolve(null);
   let hasValidationError = false;
 
@@ -102,26 +101,26 @@ function validateAll(form, validateBlank = false) {
     // Only validate blank fields if `validateBlank` is set
     if (field.value === '' && !validateBlank) return;
 
-    ready = ready.then(function () {
+    ready = ready.then(function() {
       return validate(field.value, field.rules);
     }).then(function(value) {
       accumulator.push({
         field: field.name,
         success: true,
-        message: value[0].message
+        message: value[0].message,
       });
     }).catch(function(reason) {
       hasValidationError = true;
       accumulator.push({
         field: field.name,
         success: false,
-        message: reason.message
+        message: reason.message,
       });
     });
   });
 
-  return ready.then(function () {
-    if(hasValidationError) {
+  return ready.then(function() {
+    if (hasValidationError) {
       throw accumulator;
     }
 
@@ -132,7 +131,7 @@ function validateAll(form, validateBlank = false) {
 
 /**
  * Return a list of all registered validation functions.
- * @returns {Array}
+ * @returns {Array} List of all registered validation functions
  */
 function listValidations() {
   return keysIn(validations);
