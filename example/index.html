@@ -6,7 +6,7 @@
 
     <script src="../dist/modernizr.js"></script>
 
-    <link rel="stylesheet" href="../node_modules/dosomething-neue/dist/neue.css"/>
+    <link rel="stylesheet" href="../node_modules/@dosomething/forge/dist/forge.css"/>
     <link rel="stylesheet" href="../dist/validation.css"/>
   </head>
   <body>
@@ -33,7 +33,7 @@
               <form action="#">
                 <div class="form-item">
                   <label class="field-label" for="first_name">First Name</label>
-                  <input id="first_name" name="first_name" class="text-field" type="text" />
+                  <input id="first_name" name="first_name" class="text-field" type="text" data-validate="hokeypokey" />
                 </div>
 
                 <div class="form-item">
@@ -66,12 +66,11 @@
     <script src="../node_modules/es6-promise/dist/es6-promise.min.js"></script>
 
     <script src="../node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="../node_modules/dosomething-neue/dist/neue.js"></script>
+    <script src="../node_modules/@dosomething/forge/dist/forge.js"></script>
     <script src="../dist/validation.js"></script>
 
-    <script>
-      // Fire it up!
-      jQuery(document).ready(function() {
+    <script type="text/javascript">
+      jQuery(function() {
         DSValidation.init();
       });
     </script>

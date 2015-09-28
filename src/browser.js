@@ -1,18 +1,8 @@
 /* eslint-disable */
 
 import $ from 'jquery';
-import Core from './core';
-
-
-/**
- * Check whether element is <input>, <select>, or <textarea>.
- * @param {jQuery} $el  Element to check type of.
- * @returns {boolean}
- */
-function isFormField($el) {
-  const tag = $el.prop('tagName');
-  return ( tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA' );
-}
+import { isFormField } from './utilities/dom';
+let Core;
 
 
 /**
@@ -41,7 +31,7 @@ function showValidationMessage($field, result) {
     $field.addClass('has-error');
     $fieldMessage.addClass('has-error');
 
-    if (isFormField($field)) {
+    if (isFormField($field[0])) {
       $field.addClass('shake');
     }
     // Events.emit('Validation:InlineError', $fieldLabel.attr('for'));
@@ -209,15 +199,15 @@ function formSubmitHandler(event, force = false) {
 /**
  * Set it all up! Should be run on documentReady.
  */
-function init() {
+function init(core) {
   const $body = $('body');
+  Core = core;
 
   // Prepare the labels on any `[data-validate]` fields in the DOM at load
   $body.find('[data-validate]').each(function() {
     const $field = $(this);
 
     prepareLabel($(`label[for="${$field.attr('id')}"]`));
-
     $field.on('blur', fieldBlurHandler);
   });
 

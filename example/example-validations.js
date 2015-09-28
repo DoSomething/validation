@@ -5,7 +5,7 @@
   "use strict";
 
   // # Add validation functions...
-  DSValidation.registerValidation('match', function(value, options, accept, reject) {
+  DSValidation.registerValidator('match', function(value, options, accept, reject) {
     if(value === options.matchValue && value !== '') {
       return accept({
         message: 'Looks good!'
@@ -19,7 +19,7 @@
 
   // ## Name
   // Greets the user when they enter their name.
-  DSValidation.registerValidation("required", function(string, options, accept, reject) {
+  DSValidation.registerValidator("required", function(string, options, accept, reject) {
     if( string !== "" ) {
       return accept({
         message: 'Looks good!'
@@ -31,7 +31,7 @@
     }
   });
 
-  DSValidation.registerValidation("min", function(value, params, accept, reject) {
+  DSValidation.registerValidator("min", function(value, params, accept, reject) {
     if(parseInt(value) >= params) {
       return accept({
         message: 'Great!'
@@ -43,7 +43,7 @@
     }
   });
 
-  DSValidation.registerValidation("max", function(value, params, accept, reject) {
+  DSValidation.registerValidator("max", function(value, params, accept, reject) {
     if(parseInt(value) <= params) {
       return accept({
         message: 'Great!'
@@ -54,10 +54,25 @@
       });
     }
   });
+  //
+  //DSValidation.registerValidator("hokeypokey", function(value, params, accept, reject) {
+  //  setTimeout(function() {
+  //    if(parseInt(value) <= 5) {
+  //      return accept({
+  //        message: 'Hokay!'
+  //      });
+  //    } else {
+  //      return reject({
+  //        message: 'Value must be 5 or less.'
+  //      });
+  //    }
+  //
+  //  }, 3000);
+  //});
 
   // ## Birthday
   // Validates correct date input, reasonable birthdate, and says a nice message.
-  DSValidation.registerValidation("birthday", function(string, options, accept, reject) {
+  DSValidation.registerValidator("birthday", function(string, options, accept, reject) {
     var birthday, birthMonth, birthDay, birthYear, format;
 
     // Parse date from string

@@ -1,25 +1,28 @@
 import Browser from './browser';
 import Core from './core';
 
+const core = new Core();
+
 // Export public API:
 export default {
-  /**
+  /*
    * Main browser entry-point. Run this to hook up
    * events and prepare form fields.
    */
-  init: Browser.init,
+  init: () => Browser.init(core),
+  showValidationMessage: (...args) => Browser.showValidationMessage(...args),
 
-  /**
+  /*
    * Core validation methods, for advanced use.
    */
-  validate: Core.validate,
-  registerValidation: Core.registerValidation,
-  listValidations: Core.listValidations,
+  validate: (...args) => core.validate(...args),
+  registerValidator: (...args) => core.registerValidator(...args),
+  listValidators: () => core.listValidators(),
 
-  /**
+  /*
    * Events.
    */
-  on: Core.on,
-  once: Core.once,
-  removeListener: Core.removeListener,
+  on: (...args) => Core.on(...args),
+  once: (...args) => Core.once(...args),
+  removeListener: (...args) => Core.removeListener(...args),
 };
