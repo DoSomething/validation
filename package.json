@@ -40,7 +40,6 @@
     "grunt-webpack": "^1.0.8",
     "jshint-stylish": "^1.0.0",
     "load-grunt-tasks": "^3.1.0",
-    "neue": "DoSomething/neue#v6.3.0",
     "qunitjs": "^1.17.1",
     "time-grunt": "^1.0.0",
     "webpack": "^1.4.5",

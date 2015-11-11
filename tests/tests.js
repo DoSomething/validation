@@ -3,6 +3,13 @@
 module("Validation");
 
 test("Match", function() {
+
+  // Stub Drupal.t
+  window.Drupal = {};
+  window.Drupal.t = function(string) {
+    return string;
+  };
+
   DSValidation.Validations.match.fn("dog", "cat", function(result) {
     ok(result.success == false, "should reject if different strings");
   });
