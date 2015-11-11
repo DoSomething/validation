@@ -1,6 +1,6 @@
 {
   "name": "dosomething-validation",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "license": "MIT",
   "engines": {
     "node": "0.10.x"
@@ -36,11 +36,10 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-modernizr": "^0.6.0",
     "grunt-postcss": "^0.2.0",
-    "grunt-sass": "^0.18.0",
+    "grunt-sass": "^1.1.0",
     "grunt-webpack": "^1.0.8",
     "jshint-stylish": "^1.0.0",
     "load-grunt-tasks": "^3.1.0",
-    "neue": "DoSomething/neue#v6.3.0",
     "qunitjs": "^1.17.1",
     "time-grunt": "^1.0.0",
     "webpack": "^1.4.5",

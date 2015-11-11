@@ -1,3 +1,5 @@
+/* globals Drupal */
+
 /**
  * Client-side form validation logic. Form element is validated based
  * on `data-validate` attribute, and validation output is placed in
@@ -18,7 +20,6 @@
 import $ from "jquery";
 import Events from "./events";
 var validations = [];
-
 
 /**
  * Returns whether element is <input>, <select>, or <textarea>.
@@ -68,7 +69,7 @@ var showValidationMessage = function($field, result) {
   }
 
   if(result.suggestion) {
-    $fieldMessage.html("Did you mean " + result.suggestion.full + "? <a href='#' data-suggestion='" + result.suggestion.full + "'class='js-mailcheck-fix'>Fix it!</a>");
+    $fieldMessage.html(Drupal.t("Did you mean") + " " + result.suggestion.full + "? <a href='#' data-suggestion='" + result.suggestion.full + "'class='js-mailcheck-fix'>" + Drupal.t("Fix it!") + "</a>");
     Events.publish("Validation:Suggestion", result.suggestion.domain);
   }
 
@@ -330,12 +331,12 @@ registerValidationFunction("match", function(string, secondString, done) {
   if(string === secondString && string !== "") {
     return done({
       success: true,
-      message: "Looks good!"
+      message: Drupal.t("Looks good!")
     });
   } else {
     return done({
       success: false,
-      message: "That doesn't match."
+      message: Drupal.t("That doesn't match.")
     });
   }
 });
