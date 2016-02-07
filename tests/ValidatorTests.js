@@ -2,16 +2,16 @@ import test from 'ava';
 import isPromise from 'is-promise';
 import 'babel-core/register';
 
-import Core from '../src/core';
+import Validator from '../src/Validator';
 
 test.beforeEach(t => {
-  t.context.core = new Core();
+  t.context.validator = new Validator();
 
   // Simple passing and failing validator functions
-  t.context.core.registerValidator('yes', (name, value, resolve) => resolve(true));
-  t.context.core.registerValidator('no', (name, value, resolve) => resolve(false));
+  t.context.validator.registerValidator('yes', (name, value, resolve) => resolve(true));
+  t.context.validator.registerValidator('no', (name, value, resolve) => resolve(false));
 
-  // Form data for Core.validateAll() tests
+  // Form data for Validator.validateAll() tests
   t.context.form = {
     name: {
       rules: 'yes',
@@ -33,84 +33,84 @@ test.beforeEach(t => {
 });
 
 /**
- * @tests Core.listValidators(), Core.hasValidator(), Core.registerValidator()
+ * @tests Validator.listValidators(), Validator.hasValidator(), Validator.registerValidator()
  * @param {Test} t - Tester
  */
 test('can list, query, and add validators', t => {
-  // Make a fresh Core for testing state
-  let core = new Core();
+  // Make a fresh Validator for testing state
+  let validator = new Validator();
 
-  t.is(core.listValidators().length, 0, 'should not have any validators to start');
-  t.false(core.hasValidator('dog'), 'should return false when asking for a nonexistent validator');
+  t.is(validator.listValidators().length, 0, 'should not have any validators to start');
+  t.false(validator.hasValidator('dog'), 'should return false when asking for a nonexistent validator');
 
   // Register a simple validator
-  core.registerValidator('yes', (name, value, resolve) => resolve(true));
+  validator.registerValidator('yes', (name, value, resolve) => resolve(true));
 
-  t.true(core.hasValidator('yes'), 'should return true when asking for an existing validator');
+  t.true(validator.hasValidator('yes'), 'should return true when asking for an existing validator');
 
   t.throws(function () {
-    core.registerValidator('yes', () => true);
+    validator.registerValidator('yes', () => true);
   }, `A validation function called 'yes' has already been registered.`, 'should throw if redefining a validator');
 });
 
 
 /**
- * @tests Core.parseRule()
+ * @tests Validator.parseRule()
  * @param {Test} t - Tester
  */
 test('can parse rules', t => {
-  let core = new Core();
+  let validator = new Validator();
 
-  t.same(core.parseRules('required|unique'),
+  t.same(validator.parseRules('required|unique'),
     [ { name: 'required', param: [] }, { name: 'unique', param: [] } ],
     'correctly parses rules with arguments'
   );
 
-  t.same(core.parseRules('min:5|max:2'),
+  t.same(validator.parseRules('min:5|max:2'),
     [ { name: 'min', param: '5' }, { name: 'max', param: '2' } ],
     'correctly parses rules with arguments'
   );
 });
 
 /**
- * @tests Core.getPromise()
+ * @tests Validator.getPromise()
  * @param {Test} t - Tester
  */
 test('can create a passing validator promise', t => {
-  let { core } = t.context;
+  let { validator } = t.context;
 
   t.throws(() => {
-      core.getPromise('test', 'dog')
+      validator.getPromise('test', 'dog')
     }, `Validation rule 'dog' does not exist.`,
     'throws on trying to promisify non-existent validator'
   );
 
-  return core.getPromise('test', 'yes').then((result) => {
+  return validator.getPromise('test', 'yes').then((result) => {
     t.true(result, 'getPromise with \'yes\' validator returns true');
   });
 });
 
 
 /**
- * @tests Core.getPromise()
+ * @tests Validator.getPromise()
  * @param {Test} t - Tester
  */
 test('can create a failing validator promise', t => {
-  let { core } = t.context;
+  let { validator } = t.context;
 
-  return core.getPromise('test', 'no').then(function (result) {
+  return validator.getPromise('test', 'no').then(function (result) {
     t.false(result, 'getPromise with \'no\' validator returns false');
   });
 });
 
 /**
- * @tests Core.validate()
+ * @tests Validator.validate()
  * @param {Test} t - Tester
  */
 test('can validate a field with a passing rule', t => {
-  let { core } = t.context;
+  let { validator } = t.context;
 
-  var validatesYes = core.validate('test', 'yes');
+  var validatesYes = validator.validate('test', 'yes');
   t.true(isPromise(validatesYes), 'validate returns a promise for all validations');
 
   return validatesYes.then(function (result) {
@@ -119,13 +119,13 @@ test('can validate a field with a passing rule', t => {
 });
 
 /**
- * @tests Core.validate()
+ * @tests Validator.validate()
  * @param {Test} t - Tester
  */
 test('can validate a field with a failing rule', t => {
-  let { core } = t.context;
+  let { validator } = t.context;
 
-  return core.validate('test', 'no').then(function (result) {
+  return validator.validate('test', 'no').then(function (result) {
     t.false(result, 'invalidates a field with a failing rule');
   }).catch(function(err) {
     console.log(err);
@@ -133,40 +133,40 @@ test('can validate a field with a failing rule', t => {
 });
 
 /**
- * @tests Core.validate()
+ * @tests Validator.validate()
  * @param {Test} t - Tester
  */
 test('can validate a field with a passing & failing rule', t => {
-  let { core } = t.context;
+  let { validator } = t.context;
 
-  return core.validate('test', 'yes|no').then(function(result) {
+  return validator.validate('test', 'yes|no').then(function(result) {
     t.false(result, 'invalidates a field with a passing and failing rule');
   });
 });
 
 /**
- * @tests Core.validateAll()
+ * @tests Validator.validateAll()
  * @param {Test} t - Tester
  */
 test('can validate a form ignoring blank fields', t => {
-  let { core, form } = t.context;
+  let { validator, form } = t.context;
 
   // Validate form, ignoring blank fields.
-  return core.validateAll(form, false).then(function (result) {
+  return validator.validateAll(form, false).then(function (result) {
     t.same(result, {name: true, birthdate: true}, 'should correctly ignoring blank failing field when instructed');
   });
 });
 
 /**
- * @tests Core.validateAll()
+ * @tests Validator.validateAll()
  * @param {Test} t - Tester
  */
 test('can validate a form with blank fields', t => {
-  let { core, form } = t.context;
+  let { validator, form } = t.context;
   t.plan(1);
 
   // Validate form, *not* ignoring blank fields.
-  return core.validateAll(form, true).then(function(result) {
+  return validator.validateAll(form, true).then(function(result) {
     t.same(result, { name: true, email: false, birthdate: true }, 'should correctly validate when counting blank failing field');
   });
 });

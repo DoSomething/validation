@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import { isFormField } from './utilities/dom';
-let Core;
+let Validator;
 
 // @TODO Ugh, bye!
 const $ = window.jQuery;
@@ -154,7 +154,7 @@ function fieldBlurHandler(event) {
   let $form = $(this).closest('form');
   let formObject = serializeForm($form);
 
-  Core.validateAll(formObject, false)
+  Validator.validateAll(formObject, false)
     .then(function(results) {
       // All fields validate
       showFormMessages($form, results);
@@ -178,7 +178,7 @@ function formSubmitHandler(event, force = false) {
   // Disable form submission to prevent double-clicks.
   disableFormSubmit($form);
 
-  Core.validateAll(formObject, true)
+  Validator.validateAll(formObject, true)
     .then(function() {
       // If there are no validation errors, we should
       // submit the form by re-triggering `submit` event
@@ -198,9 +198,9 @@ function formSubmitHandler(event, force = false) {
 /**
  * Set it all up! Should be run on documentReady.
  */
-function init(core) {
+function init(validator) {
   const $body = $('body');
-  Core = core;
+  Validator = validator;
 
   // Prepare the labels on any `[data-validate]` fields in the DOM at load
   $body.find('[data-validate]').each(function() {

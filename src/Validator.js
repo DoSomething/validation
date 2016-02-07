@@ -1,8 +1,8 @@
-import map from 'lodash/collection/map';
-import forEach from 'lodash/collection/forEach';
-import isString from 'lodash/lang/isString';
+import map from 'lodash/map';
+import forEach from 'lodash/forEach';
+import isString from 'lodash/isString';
 
-class Core {
+class Validator {
   constructor() {
     /**
      * Array of registered validators.
@@ -122,4 +122,4 @@ class Core {
   }
 }
 
-export default Core;
+export default Validator;

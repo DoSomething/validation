@@ -25,7 +25,7 @@
   "dependencies": {
     "eventemitter3": "^0.1.6",
     "jquery": "^1.11.0",
-    "lodash": "^3.6.0"
+    "lodash": "^4.2.1"
   },
   "devDependencies": {
     "@dosomething/forge": "~6.5.0",

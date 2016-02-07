@@ -13,7 +13,7 @@ const Validation = {
   showValidationMessage: (...args) => Browser.showValidationMessage(...args),
 
   /*
-   * Core validation methods, for advanced use.
+   * Validator validation methods, for advanced use.
    */
   validate: (...args) => core.validate(...args),
   registerValidator: (...args) => core.registerValidator(...args),
