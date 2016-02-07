@@ -1,10 +1,10 @@
 import Browser from './browser';
-import Core from './core';
+import Core from './Core';
 
 const core = new Core();
 
 // Export public API:
-export default {
+const Validation = {
   /*
    * Main browser entry-point. Run this to hook up
    * events and prepare form fields.
@@ -26,3 +26,7 @@ export default {
   once: (...args) => Core.once(...args),
   removeListener: (...args) => Core.removeListener(...args),
 };
+
+// Export the library. It will be accessible via CommonJS/AMD,
+// or as a global (window.DSValidation) in the browser.
+export default Validation;

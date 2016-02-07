@@ -1,8 +1,10 @@
 /* eslint-disable */
 
-import $ from 'jquery';
 import { isFormField } from './utilities/dom';
 let Core;
+
+// @TODO Ugh, bye!
+const $ = window.jQuery;
 
 
 /**
@@ -155,9 +157,6 @@ function fieldBlurHandler(event) {
   Core.validateAll(formObject, false)
     .then(function(results) {
       // All fields validate
-      showFormMessages($form, results);
-    })
-    .catch(function(results) {
       showFormMessages($form, results);
     });
 }

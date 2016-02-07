@@ -31,7 +31,7 @@
     }
   });
 
-  DSValidation.registerValidator("min", function(value, params, accept, reject) {
+  DSValidation.registerValidator("min", function(value, params, resolve) {
     if(parseInt(value) >= params) {
       return accept({
         message: 'Great!'
@@ -43,32 +43,17 @@
     }
   });
 
-  DSValidation.registerValidator("max", function(value, params, accept, reject) {
+  DSValidation.registerValidator("max", function(value, params, resolve) {
     if(parseInt(value) <= params) {
-      return accept({
+      return resolve({
         message: 'Great!'
       });
     } else {
-      return reject({
+      return resolve({
         message: 'Value must be less than ' + params + '.'
       });
     }
   });
-  //
-  //DSValidation.registerValidator("hokeypokey", function(value, params, accept, reject) {
-  //  setTimeout(function() {
-  //    if(parseInt(value) <= 5) {
-  //      return accept({
-  //        message: 'Hokay!'
-  //      });
-  //    } else {
-  //      return reject({
-  //        message: 'Value must be 5 or less.'
-  //      });
-  //    }
-  //
-  //  }, 3000);
-  //});
 
   // ## Birthday
   // Validates correct date input, reasonable birthdate, and says a nice message.

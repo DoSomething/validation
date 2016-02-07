@@ -2,8 +2,11 @@
 dist/
 lib/
 
+# Ignore code coverage output
+.nyc_output
+coverage/
+
 # Ignore dependencies
-bower_components/
 node_modules
 npm-debug.log
 

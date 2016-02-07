@@ -1,0 +1,8 @@
+{
+  "presets": ["fender/babel"],
+  "env": {
+    "development": {
+      "sourceMaps": "inline"
+    }
+  }
+}

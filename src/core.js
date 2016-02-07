@@ -1,15 +1,22 @@
-import keysIn from 'lodash/object/keysIn';
 import map from 'lodash/collection/map';
+import forEach from 'lodash/collection/forEach';
 import isString from 'lodash/lang/isString';
 
 class Core {
-
   constructor() {
     /**
      * Array of registered validators.
      * @type {Object}
      */
     this.validators = {};
+  }
+
+  /**
+   * Return a list of all registered validation functions.
+   * @returns {Array} List of all registered validation functions
+   */
+  listValidators() {
+    return Object.keys(this.validators);
   }
 
   /**
@@ -41,14 +48,12 @@ class Core {
    * @param {array} params - (Optional) parameters for validation rule
    * @returns {Promise} - Validation
    */
-  getPromise(value, rule, params) {
+  getPromise(value, rule, params = []) {
     if (!this.hasValidator(rule)) {
       throw new Error(`Validation rule '${rule}' does not exist.`);
     }
 
-    return new Promise((resolve, reject) => {
-      this.validators[rule](value, params, resolve, reject);
-    });
+    return new Promise((resolve) => this.validators[rule](value, params, resolve));
   }
 
   /**
@@ -61,7 +66,7 @@ class Core {
       const [ruleName, ruleParams] = rule.split(':', 2);
       return {
         name: ruleName,
-        param: ruleParams,
+        param: ruleParams || [],
       };
     });
   }
@@ -69,7 +74,7 @@ class Core {
   /**
    * Returns a promise to validate a given field.
    * @param {string} value  - Value to be validated
-   * @param {string|array} rules - Rules to use for validatation
+   * @param {string|array} rules - Rules to use for validation
    * @returns {Promise} Promise to validate given field
    */
   validate(value, rules) {
@@ -77,11 +82,15 @@ class Core {
     const parsedRules = isString(rules) ? this.parseRules(rules) : rules;
 
     // Create a promise for each validation rule
-    const promises = map(parsedRules, (rule) => this.getPromise(value, rule.name, rule.param));
+    const promises = map(parsedRules, (rule) => {
+      return this.getPromise(value, rule.name, rule.param)
+    });
 
-    return Promise.all(promises);
+    // Validate each rule, and return false if any of them are false
+    return Promise.all(promises).then((results) => {
+      return results.every((result) => result === true);
+    });
   }
-
 
   /**
    * Returns a promise to validate all fields in a given form.
@@ -90,53 +99,27 @@ class Core {
    * @returns {Promise} Promise to validate given fields
    */
   validateAll(form, validateBlank = false) {
-    const accumulator = [];
+    const accumulator = {};
     let ready = Promise.resolve(null);
-    let hasValidationError = false;
 
-    form.forEach((field) => {
+    forEach(form, (field, name) => {
       // Only validate fields with a `rules` option
       if (!field.rules) return;
 
       // Only validate blank fields if `validateBlank` is set
       if (field.value === '' && !validateBlank) return;
 
-      ready = ready.then(() => {
-        return this.validate(field.value, field.rules);
-      }).then((value) => {
-        accumulator.push({
-          field: field.name,
-          success: true,
-          message: value[0].message,
-        });
-      }).catch((reason) => {
-        hasValidationError = true;
-        accumulator.push({
-          field: field.name,
-          success: false,
-          message: reason.message,
-        });
+      ready = this.validate(field.value, field.rules)
+      .then((result) => {
+        // @TODO: Messages!
+        accumulator[name] = result;
       });
     });
 
     return ready.then(() => {
-      if (hasValidationError) {
-        throw accumulator;
-      }
-
       return accumulator;
     });
   }
-
-
-  /**
-   * Return a list of all registered validation functions.
-   * @returns {Array} List of all registered validation functions
-   */
-  listValidators() {
-    return keysIn(this.validators);
-  }
-
 }
 
 export default Core;
