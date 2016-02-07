@@ -9,7 +9,7 @@ var fender = require('fender');
  */
 var config = fender(pkg, {
   bundles: {
-    'validation.js': './src/index.js'
+    'validation.js': './index.js'
   },
 });
 

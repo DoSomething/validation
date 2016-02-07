@@ -89,6 +89,8 @@ class Validator {
     // Validate each rule, and return false if any of them are false
     return Promise.all(promises).then((results) => {
       return results.every((result) => result === true);
+    }).catch((err) => {
+      console.error(err);
     });
   }
 
