@@ -16,8 +16,8 @@ const Validation = {
    * Validator validation methods, for advanced use.
    */
   validate: (...args) => core.validate(...args),
-  registerValidator: (...args) => core.registerValidator(...args),
-  listValidators: () => core.listValidators(),
+  registerValidator: (...args) => core.addRule(...args),
+  listValidators: () => core.listRules(),
 
   /*
    * Events.

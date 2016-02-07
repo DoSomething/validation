@@ -5,61 +5,61 @@ import isString from 'lodash/isString';
 class Validator {
   constructor() {
     /**
-     * Array of registered validators.
+     * Array of registered rules.
      * @type {Object}
      */
-    this.validators = {};
+    this.rules = {};
   }
 
   /**
    * Return a list of all registered validation functions.
    * @returns {Array} List of all registered validation functions
    */
-  listValidators() {
-    return Object.keys(this.validators);
+  listRules() {
+    return Object.keys(this.rules);
   }
 
   /**
    * Return whether or not a validation exists.
-   * @param {string} name - Name of validation function
+   * @param {String} name - Name of validation function
    * @returns {boolean} - Validation exists
    */
-  hasValidator(name) {
-    return this.validators.hasOwnProperty(name);
+  hasRule(name) {
+    return this.rules.hasOwnProperty(name);
   }
 
   /**
    * Register a new validation function.
-   * @param {string} name - Name of validation function
+   * @param {String} name - Name of validation function
    * @param {function} fn - Function, with name, value, options, and callback parameters
    */
-  registerValidator(name, fn) {
-    if (this.hasValidator(name)) {
+  addRule(name, fn) {
+    if (this.hasRule(name)) {
       throw new Error(`A validation function called '${name}' has already been registered.`);
     }
 
-    this.validators[name] = fn;
+    this.rules[name] = fn;
   }
 
   /**
    * Return a promise for the given validation.
-   * @param {string} value - Value to be validated
-   * @param {string} rule - Name of validation rule
-   * @param {array} params - (Optional) parameters for validation rule
+   * @param {String} value - Value to be validated
+   * @param {String} rule - Name of validation rule
+   * @param {Array} [params=[]] - (Optional) parameters for validation rule
    * @returns {Promise} - Validation
    */
   getPromise(value, rule, params = []) {
-    if (!this.hasValidator(rule)) {
+    if (!this.hasRule(rule)) {
       throw new Error(`Validation rule '${rule}' does not exist.`);
     }
 
-    return new Promise((resolve) => this.validators[rule](value, params, resolve));
+    return new Promise((resolve) => this.rules[rule](value, params, resolve));
   }
 
   /**
    * Convert a set of rules (and optional params) from a string to an array.
-   * @param {string} rules - Pipe-separated rules, with optional parameters after ':'
-   * @returns {object} Parsed rule name & parameters
+   * @param {String} rules - Pipe-separated rules, with optional parameters after ':'
+   * @returns {Object} Parsed rule name & parameters
    */
   parseRules(rules) {
     return rules.split('|').map(function(rule) {
@@ -73,8 +73,8 @@ class Validator {
 
   /**
    * Returns a promise to validate a given field.
-   * @param {string} value  - Value to be validated
-   * @param {string|array} rules - Rules to use for validation
+   * @param {String} value  - Value to be validated
+   * @param {String|Array} rules - Rules to use for validation
    * @returns {Promise} Promise to validate given field
    */
   validate(value, rules) {
@@ -94,7 +94,7 @@ class Validator {
 
   /**
    * Returns a promise to validate all fields in a given form.
-   * @param {object} form - Object containing field names, rules, and their values
+   * @param {Object} form - Object containing field names, rules, and their values
    * @param {boolean} [validateBlank=false] - Should blank fields be validated?
    * @returns {Promise} Promise to validate given fields
    */

@@ -8,8 +8,8 @@ test.beforeEach(t => {
   t.context.validator = new Validator();
 
   // Simple passing and failing validator functions
-  t.context.validator.registerValidator('yes', (name, value, resolve) => resolve(true));
-  t.context.validator.registerValidator('no', (name, value, resolve) => resolve(false));
+  t.context.validator.addRule('yes', (name, value, resolve) => resolve(true));
+  t.context.validator.addRule('no', (name, value, resolve) => resolve(false));
 
   // Form data for Validator.validateAll() tests
   t.context.form = {
@@ -33,24 +33,24 @@ test.beforeEach(t => {
 });
 
 /**
- * @tests Validator.listValidators(), Validator.hasValidator(), Validator.registerValidator()
+ * @tests Validator.listRules(), Validator.hasRule(), Validator.addRule()
  * @param {Test} t - Tester
  */
-test('can list, query, and add validators', t => {
+test('can list, query, and add rules', t => {
   // Make a fresh Validator for testing state
   let validator = new Validator();
 
-  t.is(validator.listValidators().length, 0, 'should not have any validators to start');
-  t.false(validator.hasValidator('dog'), 'should return false when asking for a nonexistent validator');
+  t.is(validator.listRules().length, 0, 'should not have any rules to start');
+  t.false(validator.hasRule('dog'), 'should return false when asking for a nonexistent rule');
 
   // Register a simple validator
-  validator.registerValidator('yes', (name, value, resolve) => resolve(true));
+  validator.addRule('yes', (name, value, resolve) => resolve(true));
 
-  t.true(validator.hasValidator('yes'), 'should return true when asking for an existing validator');
+  t.true(validator.hasRule('yes'), 'should return true when asking for an existing rule');
 
   t.throws(function () {
-    validator.registerValidator('yes', () => true);
-  }, `A validation function called 'yes' has already been registered.`, 'should throw if redefining a validator');
+    validator.addRule('yes', () => true);
+  }, `A validation function called 'yes' has already been registered.`, 'should throw if redefining a rule');
 });
 
 

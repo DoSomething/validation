@@ -5,7 +5,7 @@
   "use strict";
 
   // # Add validation functions...
-  DSValidation.registerValidator('match', function(value, options, accept, reject) {
+  DSValidation.addRule('match', function(value, options, accept, reject) {
     if(value === options.matchValue && value !== '') {
       return accept({
         message: 'Looks good!'
@@ -19,7 +19,7 @@
 
   // ## Name
   // Greets the user when they enter their name.
-  DSValidation.registerValidator("required", function(string, options, accept, reject) {
+  DSValidation.addRule("required", function(string, options, accept, reject) {
     if( string !== "" ) {
       return accept({
         message: 'Looks good!'
@@ -31,7 +31,7 @@
     }
   });
 
-  DSValidation.registerValidator("min", function(value, params, resolve) {
+  DSValidation.addRule("min", function(value, params, resolve) {
     if(parseInt(value) >= params) {
       return accept({
         message: 'Great!'
@@ -43,7 +43,7 @@
     }
   });
 
-  DSValidation.registerValidator("max", function(value, params, resolve) {
+  DSValidation.addRule("max", function(value, params, resolve) {
     if(parseInt(value) <= params) {
       return resolve({
         message: 'Great!'
@@ -57,7 +57,7 @@
 
   // ## Birthday
   // Validates correct date input, reasonable birthdate, and says a nice message.
-  DSValidation.registerValidator("birthday", function(string, options, accept, reject) {
+  DSValidation.addRule("birthday", function(string, options, accept, reject) {
     var birthday, birthMonth, birthDay, birthYear, format;
 
     // Parse date from string
