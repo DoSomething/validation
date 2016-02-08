@@ -67,7 +67,7 @@ test('can parse rules', t => {
   );
 
   t.same(validator.parseRules('min:5|max:2'),
-    [ { name: 'min', param: '5' }, { name: 'max', param: '2' } ],
+    [ { name: 'min', param: [5] }, { name: 'max', param: [2] } ],
     'correctly parses rules with arguments'
   );
 });

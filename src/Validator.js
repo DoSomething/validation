@@ -63,7 +63,26 @@ class Validator {
    */
   parseRules(rules) {
     return rules.split('|').map(function(rule) {
-      const [ruleName, ruleParams] = rule.split(':', 2);
+      let [ruleName, ruleParams] = rule.split(':', 2);
+
+      if(ruleParams) {
+        ruleParams = ruleParams.split(',').map((value) => {
+          value = value.trim();
+
+          // Try to parse parameter as a boolean.
+          if(value.toLowerCase() === 'true') return true;
+          if(value.toLowerCase() === 'false') return false;
+
+          // Try to parse parameter as a float or integer.
+          let number = parseFloat(value);
+          if(! isNaN(number)) {
+            return number;
+          }
+
+          return value;
+        });
+      }
+
       return {
         name: ruleName,
         param: ruleParams || [],

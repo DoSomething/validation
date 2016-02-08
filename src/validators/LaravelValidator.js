@@ -13,11 +13,9 @@ class LaravelValidator extends Validator {
      * @type {Object}
      */
     this.rules = {
-      'min': min,
+      min,
     };
   }
-
- // ...
 }
 
 export default LaravelValidator;

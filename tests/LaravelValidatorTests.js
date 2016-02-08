@@ -20,11 +20,24 @@ test('can validate a sample form', t => {
       rules: 'min:4',
       value: '1',
     },
+    goodString: {
+      rules: 'min:4',
+      value: 'hello',
+    },
+    badString: {
+      rules: 'min:4',
+      value: 'dog',
+    },
   };
 
   // Validate form, ignoring blank fields.
   return validator.validateAll(form, false).then(function (result) {
-    t.same(result, {age: true, quantity: false}, 'should validate sample data correctly');
+    t.same(result, {
+      age: true,
+      quantity: false,
+      goodString: true,
+      badString: false,
+    }, 'should validate sample data correctly');
   });
 });
 
