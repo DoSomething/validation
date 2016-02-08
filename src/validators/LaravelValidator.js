@@ -1,6 +1,7 @@
 import Validator from '../Validator';
 
 import min from '../rules/min';
+import max from '../rules/max';
 
 class LaravelValidator extends Validator {
   constructor() {
@@ -14,6 +15,7 @@ class LaravelValidator extends Validator {
      */
     this.rules = {
       min,
+      max,
     };
   }
 }
