@@ -5,13 +5,17 @@ import { parseString } from '../utilities/parsers';
  *
  * @param {String} value
  * @param {Array} params
- * @param resolve
+ * @param validate
  */
-function max(value, params, resolve) {
+function max(value, params, validate) {
   let number = parseString(value);
   let bound = params[0];
 
-  return resolve(number <= bound);
+  if (number >= bound) {
+    validate(false, `The :attribute must be ${bound} or less.`)
+  }
+
+  validate(true);
 }
 
 export default max;

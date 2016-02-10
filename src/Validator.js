@@ -53,7 +53,15 @@ class Validator {
       throw new Error(`Validation rule '${rule}' does not exist.`);
     }
 
-    return new Promise((resolve) => this.rules[rule](value, params, resolve));
+    return new Promise((resolve) => {
+
+      // Helper function for forming validation objects
+      function validate(success = true, message = '') {
+        resolve({success: success, message: message});
+      }
+
+      this.rules[rule](value, params, validate)
+    });
   }
 
   /**
@@ -96,7 +104,7 @@ class Validator {
    * @param {String|Array} rules - Rules to use for validation
    * @returns {Promise} Promise to validate given field
    */
-  validate(value, rules) {
+  validate(name, value, rules) {
     // Convert `rules` to array, if necessary
     const parsedRules = isString(rules) ? this.parseRules(rules) : rules;
 
@@ -105,9 +113,20 @@ class Validator {
       return this.getPromise(value, rule.name, rule.param)
     });
 
-    // Validate each rule, and return false if any of them are false
+    // Validate each rule, and return combined status & messages.
     return Promise.all(promises).then((results) => {
-      return results.every((result) => result === true);
+      let successes = results.filter((result) => result.success === true);
+      let failures = results.filter((result) => result.success === false);
+
+      let successful = failures.length === 0;
+      let chosenResults = successful ? successes : failures;
+
+      return {
+        success: successful,
+        message: chosenResults.map((result) => {
+          return result.message.replace(':attribute', name)
+        }).filter((message) => message.length).join(' ')
+      };
     }).catch((err) => {
       console.error(err);
     });
@@ -130,11 +149,8 @@ class Validator {
       // Only validate blank fields if `validateBlank` is set
       if (field.value === '' && !validateBlank) return;
 
-      ready = this.validate(field.value, field.rules)
-      .then((result) => {
-        // @TODO: Messages!
-        accumulator[name] = result;
-      });
+      ready = this.validate(name, field.value, field.rules)
+        .then((result) => accumulator[name] = result);
     });
 
     return ready.then(() => {

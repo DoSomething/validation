@@ -17,7 +17,7 @@ describe('Validator', () => {
     assert(validator.hasRule('dog') === false, 'should return false when asking for a nonexistent rule');
 
     // Register a simple validator
-    validator.addRule('yes', (name, value, resolve) => resolve(true));
+    validator.addRule('yes', (name, value, validate) => validate(true, 'yeah'));
 
     assert(validator.hasRule('yes') === true, 'should return true when asking for an existing rule');
 
@@ -48,13 +48,13 @@ describe('Validator', () => {
    */
   it('can create a passing validator promise', () => {
     let validator = new Validator();
-    validator.addRule('yes', (name, value, resolve) => resolve(true));
-    validator.addRule('no', (name, value, resolve) => resolve(false));
+    validator.addRule('yes', (name, value, validate) => validate(true, 'yeah'));
+    validator.addRule('no', (name, value, validate) => validate(false, 'nope'));
 
     assert.throws(() => validator.getPromise('test', 'dog'), `Validation rule 'dog' does not exist.`);
 
     return validator.getPromise('test', 'yes').then((result) => {
-      assert(result === true, 'getPromise with \'yes\' validator returns true');
+      assert.deepEqual(result, {success: true, message: 'yeah'}, 'getPromise with \'yes\' validator returns passing rule');
     });
   });
 
@@ -64,11 +64,11 @@ describe('Validator', () => {
    */
   it('can create a failing validator promise', () => {
     let validator = new Validator();
-    validator.addRule('yes', (name, value, resolve) => resolve(true));
-    validator.addRule('no', (name, value, resolve) => resolve(false));
+    validator.addRule('yes', (name, value, validate) => validate(true, 'yeah'));
+    validator.addRule('no', (name, value, validate) => validate(false, 'nope'));
 
     return validator.getPromise('test', 'no').then(function (result) {
-      assert(result === false, 'getPromise with \'no\' validator returns false');
+      assert.deepEqual(result, {success: false, message: 'nope'}, 'getPromise with \'no\' validator returns failing rule');
     });
   });
 
@@ -77,14 +77,14 @@ describe('Validator', () => {
    */
   it('can validate a field with a passing rule', () => {
     let validator = new Validator();
-    validator.addRule('yes', (name, value, resolve) => resolve(true));
-    validator.addRule('no', (name, value, resolve) => resolve(false));
+    validator.addRule('yes', (name, value, validate) => validate(true));
+    validator.addRule('no', (name, value, validate) => validate(false));
 
-    var validatesYes = validator.validate('test', 'yes');
+    var validatesYes = validator.validate('name', 'test', 'yes');
     assert(isPromise(validatesYes) === true, 'validate returns a promise for all validations');
 
     return validatesYes.then(function (result) {
-      assert(result === true, 'validates a field with a passing rule');
+      assert(result.success === true, 'validates a field with a passing rule');
     });
   });
 
@@ -93,11 +93,11 @@ describe('Validator', () => {
    */
   it('can validate a field with a failing rule', () => {
     let validator = new Validator();
-    validator.addRule('yes', (name, value, resolve) => resolve(true));
-    validator.addRule('no', (name, value, resolve) => resolve(false));
+    validator.addRule('yes', (name, value, validate) => validate(true));
+    validator.addRule('no', (name, value, validate) => validate(false));
 
-    return validator.validate('test', 'no').then(function (result) {
-      assert(result === false, 'invalidates a field with a failing rule');
+    return validator.validate('name', 'test', 'no').then(function (result) {
+      assert(result.success === false, 'invalidates a field with a failing rule');
     });
   });
 
@@ -107,11 +107,11 @@ describe('Validator', () => {
    */
   it('can validate a field with a passing & failing rule', () => {
     let validator = new Validator();
-    validator.addRule('yes', (name, value, resolve) => resolve(true));
-    validator.addRule('no', (name, value, resolve) => resolve(false));
+    validator.addRule('yes', (name, value, validate) => validate(true));
+    validator.addRule('no', (name, value, validate) => validate(false));
 
-    return validator.validate('test', 'yes|no').then(function(result) {
-      assert(result === false, 'invalidates a field with a passing and failing rule');
+    return validator.validate('name', 'test', 'yes|no').then(function(result) {
+      assert(result.success === false, 'invalidates a field with a passing and failing rule');
     });
   });
 
@@ -145,7 +145,16 @@ describe('Validator', () => {
 
     // Validate form, ignoring blank fields.
     return validator.validateAll(form, false).then(function (result) {
-      assert.deepEqual(result, {name: true, birthdate: true}, 'should correctly ignoring blank failing field when instructed');
+      assert.deepEqual(result, {
+        name: {
+          success: true,
+          message: '',
+        },
+        birthdate: {
+          success: true,
+          message: '',
+        }
+      }, 'should correctly ignoring blank failing field when instructed');
     });
   });
 
@@ -155,8 +164,8 @@ describe('Validator', () => {
    */
   it('can validate a form with blank fields', () => {
     let validator = new Validator();
-    validator.addRule('yes', (name, value, resolve) => resolve(true));
-    validator.addRule('no', (name, value, resolve) => resolve(false));
+    validator.addRule('yes', (name, value, validate) => validate(true));
+    validator.addRule('no', (name, value, validate) => validate(false, 'nah'));
 
     let form = {
       name: {
@@ -179,7 +188,20 @@ describe('Validator', () => {
 
     // Validate form, *not* ignoring blank fields.
     return validator.validateAll(form, true).then(function(result) {
-      assert.deepEqual(result, { name: true, email: false, birthdate: true }, 'should correctly validate when counting blank failing field');
+      assert.deepEqual(result, {
+        name: {
+          success: true,
+          message: '',
+        },
+        email: {
+          success: false,
+          message: 'nah',
+        },
+        birthdate: {
+          success: true,
+          message: '',
+        }
+      }, 'should correctly validate when counting blank failing field');
     });
   });
 

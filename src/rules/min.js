@@ -7,13 +7,17 @@ import { parseString } from '../utilities/parsers';
  *
  * @param {String} value
  * @param {Array} params
- * @param resolve
+ * @param validate
  */
-function min(value, params, resolve) {
+function min(value, params, validate) {
   let number = parseString(value);
   let bound = params[0];
 
-  return resolve(number >= bound);
+  if (number <= bound) {
+    validate(false, `The :attribute must be ${bound} or greater.`)
+  }
+
+  validate(true);
 }
 
 export default min;
