@@ -130,7 +130,7 @@ class Validator {
         message: combinedMessages,
       };
     }).catch((err) => {
-      console.error(err);
+      throw err;
     });
   }
 
@@ -157,6 +157,8 @@ class Validator {
 
     return ready.then(() => {
       return accumulator;
+    }).catch((err) => {
+      throw err;
     });
   }
 }
