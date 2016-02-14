@@ -118,14 +118,16 @@ class Validator {
       let successes = results.filter((result) => result.success === true);
       let failures = results.filter((result) => result.success === false);
 
-      let successful = failures.length === 0;
-      let chosenResults = successful ? successes : failures;
+      let allSuccesses = failures.length === 0;
+
+      // Combine messages for matching status & replace `:attribute` placeholders.
+      let combinedMessages = (allSuccesses ? successes : failures).map((result) => {
+        return result.message.replace(':attribute', name)
+      }).filter((message) => message.length).join(' ');
 
       return {
-        success: successful,
-        message: chosenResults.map((result) => {
-          return result.message.replace(':attribute', name)
-        }).filter((message) => message.length).join(' ')
+        success: allSuccesses,
+        message: combinedMessages,
       };
     }).catch((err) => {
       console.error(err);
