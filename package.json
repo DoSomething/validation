@@ -28,6 +28,8 @@
     "espower-babel": "^4.0.1",
     "fender": "0.0.11",
     "is-promise": "^2.1.0",
+    "jsdom": "^8.0.4",
+    "jsdom-global": "^1.6.1",
     "mocha": "^2.4.5",
     "power-assert": "^1.2.0",
     "webpack": "^1.12.12",

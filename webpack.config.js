@@ -9,7 +9,7 @@ var fender = require('fender');
  */
 var config = fender(pkg, {
   bundles: {
-    'validation.js': './index.js'
+    'validation': './index.js'
   },
 });
 
@@ -18,5 +18,10 @@ var config = fender(pkg, {
 config.output.library = 'DSValidation';
 config.output.publicPath = '/dist/';
 config.output.libraryTarget = 'umd';
+
+config.hot = false;
+config.watch = false;
+config.keepalive = true;
+config.devtool = '#inline-source-map';
 
 module.exports = config;

@@ -1,11 +1,13 @@
 /* eslint-disable */
-
 import { isFormField } from './utilities/dom';
-let Validator;
+
+import Form from './Form';
+import LaravelValidator from './validators/LaravelValidator';
 
 // @TODO Ugh, bye!
 const $ = window.jQuery;
 
+const validator = new LaravelValidator;
 
 /**
  * Show validation message in markup.
@@ -16,6 +18,7 @@ const $ = window.jQuery;
  * @param {String} result.suggestion - A suggestion for text to replace form input with.
  */
 function showValidationMessage($field, result) {
+  console.log($field, result);
   const $fieldLabel = $(`label[for='${$field.attr('id')}']`);
   const $fieldValidation = $fieldLabel.find('.validation');
   const $fieldMessage = $fieldValidation.find('.validation__message');
@@ -83,19 +86,6 @@ function showValidationMessage($field, result) {
 
 
 /**
- * Serialize a form object with `name`, `value`, and `rules` parameters.
- * @param $form
- * @returns {Object}
- */
-function serializeForm($form) {
-  return $form.serializeArray().map(function(el) {
-    el.rules = $form.find(`[name=${el.name}]`).data('validate');
-    return el;
-  });
-}
-
-
-/**
  * Prepare field label DOM to display validation messages.
  * @param {jQuery} $label Label element to prepare.
  */
@@ -137,10 +127,12 @@ function enableFormSubmit($form) {
  * Show success/failure messages on the form.
  */
 function showFormMessages($form, results) {
-  results.forEach(function(result) {
-    let $field = $form.find(`[name=${result.field}]`);
-    showValidationMessage($field, result);
-  });
+  for (var name in results) {
+    if(!results.hasOwnProperty(name)) continue;
+
+    let $field = $form.find(`[name=${name}]`);
+    showValidationMessage($field, results[name]);
+  };
 }
 
 
@@ -151,10 +143,10 @@ function showFormMessages($form, results) {
 function fieldBlurHandler(event) {
   event.preventDefault();
 
-  let $form = $(this).closest('form');
-  let formObject = serializeForm($form);
+  let el = $(this).closest('form')[0];
+  let form = new Form(el);
 
-  Validator.validateAll(formObject, false)
+  validator.validateAll(form, false)
     .then(function(results) {
       // All fields validate
       showFormMessages($form, results);
@@ -172,22 +164,27 @@ function formSubmitHandler(event, force = false) {
   // with `force = true`. Return `true` to tell browser to submit.
   if (force) return true;
 
-  let $form = $(this);
-  let formObject = serializeForm($form);
+  let el = this;
+  let form = new Form(el);
 
   // Disable form submission to prevent double-clicks.
-  disableFormSubmit($form);
+  disableFormSubmit($(el));
 
-  Validator.validateAll(formObject, true)
-    .then(function() {
+  validator.validateAll(form, true)
+    .then(function(results) {
       // If there are no validation errors, we should
       // submit the form by re-triggering `submit` event
-      $form.trigger('submit', true);
-    }).catch(function(results) {
-      // If there are form validation errors: display them,
-      // re-enable form submission for another try.
-      showFormMessages($form, results);
-      enableFormSubmit($form);
+      showFormMessages($(el), results);
+
+      let failures = Array.prototype.filter.call(results, (result) => result.success === false);
+      if(failures) {
+        enableFormSubmit($(el));
+        return;
+      }
+
+      $(el).trigger('submit', true);
+    }).catch(function(err) {
+      console.error(err);
     });
 
   // Don't submit form yet, wait for callback with `true` parameter
@@ -198,9 +195,8 @@ function formSubmitHandler(event, force = false) {
 /**
  * Set it all up! Should be run on documentReady.
  */
-function init(validator) {
+function init() {
   const $body = $('body');
-  Validator = validator;
 
   // Prepare the labels on any `[data-validate]` fields in the DOM at load
   $body.find('[data-validate]').each(function() {
@@ -214,9 +210,4 @@ function init(validator) {
   $body.on('submit', 'form', formSubmitHandler);
 }
 
-
-// Export public API:
-export default {
-  init,
-  showValidationMessage
-};
+export default init;

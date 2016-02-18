@@ -31,7 +31,7 @@
               <form action="#">
                 <div class="form-item">
                   <label class="field-label" for="first_name">First Name</label>
-                  <input id="first_name" name="first_name" class="text-field" type="text" data-validate="hokeypokey" />
+                  <input id="first_name" name="first_name" class="text-field" type="text" data-validate="min:5" />
                 </div>
 
                 <div class="form-item">
@@ -44,10 +44,10 @@
                   <input id="num_things" name="num_things" class="text-field" type="text" data-validate="min:5|max:20" placeholder="keep it between 5 and 20!" />
                 </div>
 
-                <div class="form-item">
-                  <label class="field-label" for="birthday">Birthday</label>
-                  <input id="birthday" name="birthday" class="text-field" type="text" data-validate="required|birthday" placeholder="MM/DD/YYYY" />
-                </div>
+                <!--<div class="form-item">-->
+                  <!--<label class="field-label" for="birthday">Birthday</label>-->
+                  <!--<input id="birthday" name="birthday" class="text-field" type="text" data-validate="required|birthday" placeholder="MM/DD/YYYY" />-->
+                <!--</div>-->
 
                 <div class="form-actions">
                   <input type="submit" class="button"/>
@@ -66,15 +66,6 @@
     <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="../node_modules/@dosomething/forge/dist/forge.js"></script>
     <script src="../dist/validation.js"></script>
-
-    <script type="text/javascript">
-      jQuery(function() {
-        DSValidation.init();
-      });
-    </script>
-
-    <script src="example-validations.js"></script>
-
   </body>
 </html>
 

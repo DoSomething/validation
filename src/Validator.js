@@ -3,6 +3,10 @@ import forEach from 'lodash/forEach';
 import isString from 'lodash/isString';
 
 class Validator {
+
+  /**
+   * Make a new validator.
+   */
   constructor() {
     /**
      * Array of registered rules.
@@ -161,6 +165,7 @@ class Validator {
       throw err;
     });
   }
+
 }
 
 export default Validator;
