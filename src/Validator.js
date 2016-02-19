@@ -1,6 +1,8 @@
-import map from 'lodash/map';
-import forEach from 'lodash/forEach';
-import isString from 'lodash/isString';
+var map = require('lodash/map');
+var forEach = require('lodash/forEach');
+var isString = require('lodash/isString');
+
+import { parseParameter } from './utilities/parsers';
 
 class Validator {
 
@@ -78,21 +80,7 @@ class Validator {
       let [ruleName, ruleParams] = rule.split(':', 2);
 
       if(ruleParams) {
-        ruleParams = ruleParams.split(',').map((value) => {
-          value = value.trim();
-
-          // Try to parse parameter as a boolean.
-          if(value.toLowerCase() === 'true') return true;
-          if(value.toLowerCase() === 'false') return false;
-
-          // Try to parse parameter as a float or integer.
-          let number = parseFloat(value);
-          if(! isNaN(number)) {
-            return number;
-          }
-
-          return value;
-        });
+        ruleParams = ruleParams.split(',').map(parseParameter);
       }
 
       return {
@@ -104,6 +92,7 @@ class Validator {
 
   /**
    * Returns a promise to validate a given field.
+   * @param {String} name - Field name
    * @param {String} value  - Value to be validated
    * @param {String|Array} rules - Rules to use for validation
    * @returns {Promise} Promise to validate given field
