@@ -130,6 +130,7 @@ class Validator {
       }).filter((message) => message.length).join(' ');
 
       return {
+        name: name,
         success: allSuccesses,
         message: combinedMessages,
       };
@@ -145,7 +146,7 @@ class Validator {
    * @returns {Promise} Promise to validate given fields
    */
   validateAll(form, validateBlank = false) {
-    const accumulator = {};
+    const accumulator = [];
     let ready = Promise.resolve(null);
 
     forEach(form, (field, name) => {
@@ -155,8 +156,8 @@ class Validator {
       // Only validate blank fields if `validateBlank` is set
       if (field.value === '' && !validateBlank) return;
 
-      ready = this.validate(name, field.value, field.rules)
-        .then((result) => accumulator[name] = result);
+      ready = this.validate(field.name, field.value, field.rules)
+        .then((result) => accumulator.push(result));
     });
 
     return ready.then(() => {

@@ -8,19 +8,20 @@ class Form {
    * @returns {Object}
    */
   constructor(formElement) {
-    const form = {};
+    const form = [];
 
+    // Traverse the children of the given form element and serialize any fields.
     walk(formElement, (el) => {
       if(! isFormField(el)) return;
 
       var name = el.getAttribute('name');
       if(!name) return;
 
-      form[name] = {
+      form.push({
         name: name,
         value: el.value,
         rules: el.getAttribute('data-validate'),
-      };
+      });
     });
 
     return form;

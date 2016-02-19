@@ -124,37 +124,43 @@ describe('Validator', () => {
     validator.addRule('yes', (name, value, resolve) => resolve(true));
     validator.addRule('no', (name, value, resolve) => resolve(false));
 
-    let form = {
-      name: {
+    let form = [
+      {
+        name: 'name',
         rules: 'yes',
         value: 'David',
       },
-      email: {
+      {
+        name: 'email',
         rules: 'no',
         value: '', // <-- blank field
       },
-      birthdate: {
+      {
+        name: 'birthdate',
         rules: 'yes',
         value: '10/25/1990',
       },
-      ignoredField: {
+      {
+        name: 'ignored',
         // rules: nada
         value: 'lorem ipsum'
-      }
-    };
+      },
+    ];
 
     // Validate form, ignoring blank fields.
     return validator.validateAll(form, false).then(function (result) {
-      assert.deepEqual(result, {
-        name: {
+      assert.deepEqual(result, [
+        {
+          name: 'name',
           success: true,
           message: '',
         },
-        birthdate: {
+        {
+          name: 'birthdate',
           success: true,
           message: '',
         }
-      }, 'should correctly ignoring blank failing field when instructed');
+      ], 'should correctly ignoring blank failing field when instructed');
     });
   });
 
@@ -167,41 +173,48 @@ describe('Validator', () => {
     validator.addRule('yes', (name, value, validate) => validate(true));
     validator.addRule('no', (name, value, validate) => validate(false, 'nah'));
 
-    let form = {
-      name: {
+    let form = [
+      {
+        name: 'name',
         rules: 'yes',
         value: 'David',
       },
-      email: {
+      {
+        name: 'email',
         rules: 'no',
         value: '', // <-- blank field
       },
-      birthdate: {
+      {
+        name: 'birthdate',
         rules: 'yes',
         value: '10/25/1990',
       },
-      ignoredField: {
+      {
+        name: 'ignored',
         // rules: nada
         value: 'lorem ipsum'
       }
-    };
+    ];
 
     // Validate form, *not* ignoring blank fields.
     return validator.validateAll(form, true).then(function(result) {
-      assert.deepEqual(result, {
-        name: {
+      assert.deepEqual(result, [
+        {
+          name: 'name',
           success: true,
           message: '',
         },
-        email: {
+        {
+          name: 'email',
           success: false,
           message: 'nah',
         },
-        birthdate: {
+        {
+          name: 'birthdate',
           success: true,
           message: '',
         }
-      }, 'should correctly validate when counting blank failing field');
+      ], 'should correctly validate when counting blank failing field');
     });
   });
 

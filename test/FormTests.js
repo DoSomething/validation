@@ -28,18 +28,18 @@ describe('Form', () => {
 
     const form = new Form(el);
 
-    assert.deepEqual(form, {
-      'last_name': {
+    assert.deepEqual(form, [
+      {
         'name': 'last_name',
         'rules': null,
         'value': '',
       },
-      'num_things': {
+      {
         'name': 'num_things',
         'rules': 'min:5|max:20',
         'value': '7',
       },
-    });
+    ]);
   });
 
 });

@@ -13,45 +13,53 @@ describe('LaravelValidator', () => {
     let validator = new LaravelValidator();
 
     // Form data for Validator.validateAll() tests
-    let form = {
-      age: {
+    let form = [
+      {
+        name: 'age',
         rules: 'max:22|min:18',
         value: '21',
       },
-      animal: {
+      {
+        name: 'animal',
         rules: 'min:4',
         value: 'dog',
       },
-      goodString: {
+      {
+        name: 'good_string',
         rules: 'min:4',
         value: 'hello',
       },
-      quantity: {
+      {
+        name: 'quantity',
         rules: 'min:4',
         value: '1',
       },
-    };
+    ];
 
     // Validate form, ignoring blank fields.
     return validator.validateAll(form, false).then(function (result) {
-      assert.deepEqual(result, {
-        age: {
+      assert.deepEqual(result, [
+        {
+          name: 'age',
           success: true,
           message: '',
         },
-        animal: {
+        {
+          name: 'animal',
           success: false,
           message: 'The animal must be 4 or greater.',
         },
-        goodString: {
+        {
+          name: 'good_string',
           success: true,
           message: '',
         },
-        quantity: {
+        {
+          name: 'quantity',
           success: false,
           message: 'The quantity must be 4 or greater.',
         },
-      }, 'should validate sample data correctly');
+      ], 'should validate sample data correctly');
     });
   });
 

@@ -127,12 +127,10 @@ function enableFormSubmit($form) {
  * Show success/failure messages on the form.
  */
 function showFormMessages($form, results) {
-  for (var name in results) {
-    if(!results.hasOwnProperty(name)) continue;
-
-    let $field = $form.find(`[name=${name}]`);
-    showValidationMessage($field, results[name]);
-  };
+  results.forEach(function(result) {
+    let $field = $form.find(`[name=${result.name}]`);
+    showValidationMessage($field, result);
+  });
 }
 
 
