@@ -7,7 +7,7 @@ import { parseString } from '../utilities/parsers';
  * @param {Array} params
  * @param validate
  */
-function max(value, params, validate) {
+export default function max(value, params, validate) {
   let number = parseString(value);
   let bound = params[0];
 
@@ -17,5 +17,3 @@ function max(value, params, validate) {
 
   validate(true);
 }
-
-export default max;

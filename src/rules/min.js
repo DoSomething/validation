@@ -9,7 +9,7 @@ import { parseString } from '../utilities/parsers';
  * @param {Array} params
  * @param validate
  */
-function min(value, params, validate) {
+export default function min(value, params, validate) {
   let number = parseString(value);
   let bound = params[0];
 
@@ -19,5 +19,3 @@ function min(value, params, validate) {
 
   validate(true);
 }
-
-export default min;
