@@ -5,6 +5,12 @@
   "engines": {
     "node": ">=4.x.x"
   },
+  "babel": {
+    "presets": [
+      "es2015",
+      "react"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/DoSomething/validation.git"
@@ -23,10 +29,12 @@
   },
   "devDependencies": {
     "@dosomething/forge": "~6.5.0",
+    "@dosomething/webpack-config": "^1.1.1",
     "babel-cli": "^6.4.5",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.11.1",
     "es6-promise": "^2.0.1",
     "espower-babel": "^4.0.1",
-    "fender": "0.0.11",
     "is-promise": "^2.1.0",
     "jsdom": "^8.0.4",
     "jsdom-global": "^1.6.1",
