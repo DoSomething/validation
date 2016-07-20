@@ -8,7 +8,8 @@
   "babel": {
     "presets": [
       "es2015",
-      "react"
+      "react",
+      "babel-preset-power-assert"
     ]
   },
   "repository": {
@@ -20,7 +21,7 @@
     "start": "webpack-dev-server",
     "build": "NODE_ENV=production webpack && babel src --out-dir lib",
     "prepublish": "npm run build",
-    "test": "mocha --compilers js:espower-babel/guess test/**/*.js"
+    "test": "mocha --compilers js:babel-register test/**/*.js"
   },
   "dependencies": {
     "eventemitter3": "^0.1.6",
@@ -32,9 +33,10 @@
     "@dosomething/webpack-config": "^1.1.1",
     "babel-cli": "^6.4.5",
     "babel-preset-es2015": "^6.9.0",
+    "babel-preset-power-assert": "^1.0.0",
     "babel-preset-react": "^6.11.1",
+    "babel-register": "^6.9.0",
     "es6-promise": "^2.0.1",
-    "espower-babel": "^4.0.1",
     "is-promise": "^2.1.0",
     "jsdom": "^8.0.4",
     "jsdom-global": "^1.6.1",
