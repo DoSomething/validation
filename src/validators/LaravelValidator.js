@@ -10,7 +10,7 @@ class LaravelValidator extends Validator {
     /**
      * Array of registered rules. Based on the included
      * defaults in Laravel, the PHP framework.
-     * @see https://www.laravel.com/docs/5.1/Validation
+     * @see https://www.laravel.com/docs/5.2/Validation
      * @type {Object}
      */
     this.rules = {

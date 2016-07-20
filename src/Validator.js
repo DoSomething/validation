@@ -55,12 +55,11 @@ class Validator {
    * @returns {Promise} - Validation
    */
   getPromise(value, rule, params = []) {
-    if (!this.hasRule(rule)) {
+    if (! this.hasRule(rule)) {
       throw new Error(`Validation rule '${rule}' does not exist.`);
     }
 
     return new Promise((resolve) => {
-
       // Helper function for forming validation objects
       function validate(success = true, message = '') {
         resolve({success: success, message: message});
@@ -76,7 +75,7 @@ class Validator {
    * @returns {Object} Parsed rule name & parameters
    */
   parseRules(rules) {
-    return rules.split('|').map(function(rule) {
+    return rules.split('|').map((rule) => {
       let [ruleName, ruleParams] = rule.split(':', 2);
 
       if(ruleParams) {
@@ -138,7 +137,7 @@ class Validator {
     const accumulator = [];
     let ready = Promise.resolve(null);
 
-    forEach(form, (field, name) => {
+    forEach(form, (field) => {
       // Only validate fields with a `rules` option
       if (!field.rules) return;
 
