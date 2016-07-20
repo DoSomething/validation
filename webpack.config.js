@@ -2,7 +2,7 @@
 
 var config = require('@dosomething/webpack-config');
 
-var c = config({
+module.exports = config({
   entry: {
     validation: './index.js'
   },
@@ -21,7 +21,3 @@ var c = config({
     }
   },
 });
-
-console.log(c);
-
-module.exports = c;
