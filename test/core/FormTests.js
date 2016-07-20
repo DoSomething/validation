@@ -3,15 +3,6 @@ import Form from '../../src/Form';
 const { describe, it, before, after } = require('mocha');
 const assert = require('power-assert');
 
-// Inject jsdom globals into this test suite
-before(function() {
-  this.jsdom = require('jsdom-global')();
-});
-
-after(function() {
-  this.jsdom(); // clean up jsdom globals
-});
-
 describe('Form', () => {
 
   /**

@@ -21,7 +21,7 @@
     "start": "webpack-dev-server",
     "build": "NODE_ENV=production webpack && babel src --out-dir lib",
     "prepublish": "npm run build",
-    "test": "mocha --compilers js:babel-register test/**/*.js"
+    "test": "mocha --compilers js:babel-register -r jsdom-global/register test/**/*.js"
   },
   "dependencies": {
     "eventemitter3": "^1.2.0",
