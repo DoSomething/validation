@@ -146,8 +146,7 @@ function fieldBlurHandler(event) {
 
   validator.validateAll(form, false)
     .then(function(results) {
-      // All fields validate
-      showFormMessages($form, results);
+      showFormMessages($(el), results);
     });
 }
 
@@ -197,7 +196,7 @@ function init() {
   const $body = $('body');
 
   // Prepare the labels on any `[data-validate]` fields in the DOM at load
-  $body.find('[data-validate]').each(function() {
+  $body.find('[data-validate]').each(function(el) {
     const $field = $(this);
 
     prepareLabel($(`label[for="${$field.attr('id')}"]`));
