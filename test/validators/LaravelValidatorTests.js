@@ -1,7 +1,7 @@
-import { describe, it } from 'mocha';
-import assert from 'power-assert';
+import LaravelValidator from '../../src/validators/LaravelValidator';
 
-import LaravelValidator from '../src/validators/LaravelValidator';
+const { describe, it } = require('mocha');
+const assert = require('power-assert');
 
 describe('LaravelValidator', () => {
 

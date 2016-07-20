@@ -1,3 +1,5 @@
+import Form from '../../src/Form';
+
 const { describe, it, before, after } = require('mocha');
 const assert = require('power-assert');
 
@@ -9,8 +11,6 @@ before(function() {
 after(function() {
   this.jsdom(); // clean up jsdom globals
 });
-
-import Form from '../src/Form';
 
 describe('Form', () => {
 

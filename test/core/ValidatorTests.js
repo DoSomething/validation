@@ -1,8 +1,8 @@
-import { describe, it } from 'mocha';
-import assert from 'power-assert';
-import isPromise from 'is-promise';
+import Validator from '../../src/Validator';
 
-import Validator from '../src/Validator';
+const { describe, it } = require('mocha');
+const assert = require('power-assert');
+const isPromise = require('is-promise');
 
 describe('Validator', () => {
 
