@@ -180,7 +180,7 @@ function formSubmitHandler(event, force = false) {
 
       $(el).trigger('submit', true);
     }).catch(function(err) {
-      // @TODO: Do Stuff?
+      console.error(err);
     });
 
   // Don't submit form yet, wait for callback with `true` parameter
