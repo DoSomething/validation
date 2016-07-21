@@ -203,7 +203,7 @@ function init() {
   });
 
   // Attach form submit handler
-  $body.on('submit', 'form', formSubmitHandler);
+  $body.on('submit', '[data-validate-form]', formSubmitHandler);
 }
 
 export default init;
