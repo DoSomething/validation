@@ -18,7 +18,7 @@ const validator = new LaravelValidator;
  * @param {String} result.suggestion - A suggestion for text to replace form input with.
  */
 function showValidationMessage($field, result) {
-  console.log($field, result);
+  // console.log($field, result);
   const $fieldLabel = $(`label[for='${$field.attr('id')}']`);
   const $fieldValidation = $fieldLabel.find('.validation');
   const $fieldMessage = $fieldValidation.find('.validation__message');
@@ -181,7 +181,7 @@ function formSubmitHandler(event, force = false) {
 
       $(el).trigger('submit', true);
     }).catch(function(err) {
-      console.error(err);
+      // console.error(err);
     });
 
   // Don't submit form yet, wait for callback with `true` parameter
