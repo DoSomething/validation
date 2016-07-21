@@ -6,7 +6,6 @@ const forEach = require('lodash/forEach');
  * @returns {boolean} - If given element is an input, select, or textarea
  */
 export function isFormField(el) {
-  console.log(el);
   const tag = el.tagName;
   return ( tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA' );
 }
