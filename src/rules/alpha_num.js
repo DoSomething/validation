@@ -1,5 +1,5 @@
 /**
- * The field under validation must contain only alphabetic characters.
+ * The field under validation must contain only alphanumeric characters.
  *
  * @param {String} value
  * @param {Array} params
