@@ -14,7 +14,7 @@ export default function min(value, params, validate) {
   let bound = params[0];
 
   if (number < bound) {
-    return validate(false, `The :attribute must be ${bound} or greater.`)
+    return validate(false, `The :attribute must be ${bound} or greater.`);
   }
 
   validate(true);

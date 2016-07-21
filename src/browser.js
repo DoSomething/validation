@@ -18,7 +18,6 @@ const validator = new LaravelValidator;
  * @param {String} result.suggestion - A suggestion for text to replace form input with.
  */
 function showValidationMessage($field, result) {
-  console.log($field, result);
   const $fieldLabel = $(`label[for='${$field.attr('id')}']`);
   const $fieldValidation = $fieldLabel.find('.validation');
   const $fieldMessage = $fieldValidation.find('.validation__message');

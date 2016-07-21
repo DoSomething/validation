@@ -30,28 +30,37 @@
               <h1>Example Form</h1>
 
               <form action="#">
-                <div class="form-item">
-                  <label class="field-label" for="first_name">First Name</label>
-                  <input id="first_name" name="first_name" class="text-field" type="text" data-validate="min:5" placeholder="data-validate='min:5'" />
-                </div>
+                <div>
+                  <div class="form-item">
+                    <label class="field-label" for="first_name">First Name</label>
+                    <input id="first_name" name="first_name" class="text-field" type="text" data-validate="min:5" placeholder="data-validate='min:5'" />
+                  </div>
 
-                <div class="form-item">
-                  <label class="field-label" for="last_name">Last Name <em>(optional)</em></label>
-                  <input id="last_name" name="last_name" class="text-field" type="text" />
-                </div>
+                  <div class="form-item">
+                    <label class="field-label" for="last_name">Last Name <em>(optional)</em></label>
+                    <input id="last_name" name="last_name" class="text-field" type="text" />
+                  </div>
 
-                <div class="form-item">
-                  <label class="field-label" for="num_things">Numerical Thing</label>
-                  <input id="num_things" name="num_things" class="text-field" type="text" data-validate="min:5|max:20" placeholder="data-validate='min:5|max:20'" />
-                </div>
+                  <div class="form-item">
+                    <label class="field-label" for="num_things">Numerical Thing</label>
+                    <input id="num_things" name="num_things" class="text-field" type="text" data-validate="min:5|max:20" placeholder="data-validate='min:5|max:20'" />
+                  </div>
 
-                <div class="form-actions">
-                  <input type="submit" class="button"/>
+                  <div class="form-item">
+                    <label class="field-label" for="integer">Integer</label>
+                    <input id="integer" name="integer" class="text-field" type="text" data-validate="int" placeholder="data-validate='int'">
+                  </div>
+
+                  <div class="form-actions">
+                    <input type="submit" class="button"/>
+                  </div>
                 </div>
               </form>
+
             </div>
           </div>
         </div>
+
       </div>
     </div>
 
