@@ -11,8 +11,8 @@ export default function max(value, params, validate) {
   let number = parseString(value);
   let bound = params[0];
 
-  if (number >= bound) {
-    validate(false, `The :attribute must be ${bound} or less.`)
+  if (number > bound) {
+    return validate(false, `The :attribute must be ${bound} or less.`)
   }
 
   validate(true);
