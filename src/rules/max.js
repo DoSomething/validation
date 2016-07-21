@@ -5,7 +5,7 @@ import { parseString } from '../utilities/parsers';
  *
  * @param {String} value
  * @param {Array} params
- * @param validate
+ * @param {Validator.getPromise.validate} validate
  */
 export default function max(value, params, validate) {
   let number = parseString(value);
