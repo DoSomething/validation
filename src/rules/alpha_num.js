@@ -3,7 +3,7 @@
  *
  * @param {String} value
  * @param {Array} params
- * @param validate
+ * @param {Validator.getPromise.validate} validate
  */
 export default function alpha_num(value, params, validate) {
   const pattern = /^[a-z0-9]+$/i;

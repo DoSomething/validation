@@ -60,7 +60,13 @@ class Validator {
     }
 
     return new Promise((resolve) => {
-      // Helper function for forming validation objects
+      /**
+       * Helper function for forming validation response objects.
+       *
+       * @callback Validator.getPromise.validate
+       * @param {Boolean} success
+       * @param {String} [message='']
+       */
       function validate(success = true, message = '') {
         resolve({success: success, message: message});
       }
