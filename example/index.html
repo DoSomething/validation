@@ -32,7 +32,7 @@
               <form action="#" data-validate-form>
                   <div class="form-item">
                     <label class="field-label" for="first_name">First Name</label>
-                    <input id="first_name" name="first_name" class="text-field" type="text" data-validate="min:5" placeholder="data-validate='min:5'" />
+                    <input id="first_name" name="first_name" class="text-field" type="text" data-validate="alpha|min:5" placeholder="data-validate='alpha | min:5'" />
                   </div>
 
                   <div class="form-item">
@@ -42,12 +42,7 @@
 
                   <div class="form-item">
                     <label class="field-label" for="num_things">Numerical Thing</label>
-                    <input id="num_things" name="num_things" class="text-field" type="text" data-validate="min:5|max:20" placeholder="data-validate='min:5|max:20'" />
-                  </div>
-
-                  <div class="form-item">
-                    <label class="field-label" for="integer">Integer</label>
-                    <input id="integer" name="integer" class="text-field" type="text" data-validate="int" placeholder="data-validate='int'">
+                    <input id="num_things" name="num_things" class="text-field" type="text" data-validate="int|min:5|max:20" placeholder="data-validate='int | min:5 | max:20'" />
                   </div>
 
                   <div class="form-actions">
