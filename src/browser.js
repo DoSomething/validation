@@ -41,6 +41,12 @@ function showValidationMessage($field, result) {
     // Events.emit('Validation:InlineError', $fieldLabel.attr('for'));
   }
 
+  if (result.success === true && ! result.message) {
+    let successes = ['Great!', 'Got it!', 'Looks good!', 'Awesome!'];
+
+    result.message = successes[Math.floor(Math.random() * successes.length)];
+  }
+
   // Show validation message
   if (result.message) {
     $fieldMessage.text(result.message);
@@ -203,7 +209,7 @@ function init() {
   });
 
   // Attach form submit handler
-  $body.on('submit', 'form', formSubmitHandler);
+  $body.on('submit', '[data-validate-form]', formSubmitHandler);
 }
 
 export default init;
