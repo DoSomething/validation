@@ -1,8 +1,9 @@
 'use strict';
 
-var config = require('@dosomething/webpack-config');
+var configurator = require('@dosomething/webpack-config');
+var LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
-module.exports = config({
+var config = configurator({
   entry: {
     validation: './index.js'
   },
@@ -21,3 +22,9 @@ module.exports = config({
     }
   },
 });
+
+// Add the LodashModuleReplacementPlugin to shrink bundle size.
+// @see https://github.com/lodash/lodash-webpack-plugin
+config.plugins.push(new LodashModuleReplacementPlugin);
+
+module.exports = config;
