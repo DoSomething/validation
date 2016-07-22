@@ -1,6 +1,7 @@
 var map = require('lodash/map');
 var forEach = require('lodash/forEach');
 var isString = require('lodash/isString');
+var lowercase = require('lodash/lowerCase');
 
 import { parseParameter } from './utilities/parsers';
 
@@ -120,7 +121,7 @@ class Validator {
 
       // Combine messages for matching status & replace `:attribute` placeholders.
       let combinedMessages = (allSuccesses ? successes : failures).map((result) => {
-        return result.message.replace(':attribute', name)
+        return result.message.replace(':attribute', lowercase(name))
       }).filter((message) => message.length).join(' ');
 
       return {
