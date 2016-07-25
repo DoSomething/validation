@@ -117,7 +117,6 @@ describe('Validator', () => {
 
   /**
    * @tests Validator.validateAll()
-   * @param {Test} t - Tester
    */
   it('can validate a form ignoring blank fields', () => {
     let validator = new Validator();
@@ -171,7 +170,9 @@ describe('Validator', () => {
   it('can validate a form with blank fields', () => {
     let validator = new Validator();
     validator.addRule('yes', (name, value, validate) => validate(true));
+    validator.addRule('required', (name, value, validate) => validate(true));
     validator.addRule('no', (name, value, validate) => validate(false, 'nah'));
+    validator.required = ['required'];
 
     let form = [
       {
@@ -181,8 +182,8 @@ describe('Validator', () => {
       },
       {
         name: 'email',
-        rules: 'no',
-        value: '', // <-- blank field
+        rules: 'required|no',
+        value: '', // <-- blank required field
       },
       {
         name: 'birthdate',
@@ -190,7 +191,12 @@ describe('Validator', () => {
         value: '10/25/1990',
       },
       {
-        name: 'ignored',
+        name: 'ignored1',
+        rules: 'no',
+        value: '' // <-- blank, but not required
+      },
+      {
+        name: 'ignored2',
         // rules: nada
         value: 'lorem ipsum'
       }
@@ -213,7 +219,7 @@ describe('Validator', () => {
           name: 'birthdate',
           success: true,
           message: '',
-        }
+        },
       ], 'should correctly validate when counting blank failing field');
     });
   });

@@ -32,17 +32,17 @@
               <form action="#" data-validate-form>
                   <div class="form-item">
                     <label class="field-label" for="username">Username</label>
-                    <input id="username" name="username" class="text-field" type="text" data-validate="alpha|min:5" placeholder="data-validate='alpha | min:5'" />
+                    <input id="username" name="username" class="text-field" type="text" data-validate="required|alpha|min:5" placeholder="data-validate='required | alpha | min:5'" />
                   </div>
 
                   <div class="form-item">
-                    <label class="field-label" for="last_name">Name <em>(optional)</em></label>
-                    <input id="last_name" name="last_name" class="text-field" type="text" />
+                    <label class="field-label" for="name">Name <em>(optional)</em></label>
+                    <input id="name" name="name" class="text-field" type="text" data-validate="alpha" placeholder="data-validate='alpha'" />
                   </div>
 
                   <div class="form-item">
                     <label class="field-label" for="age">Age</label>
-                    <input id="age" name="age" class="text-field" type="text" data-validate="int|min:13|max:25" placeholder="data-validate='int | min:13 | max:25'" />
+                    <input id="age" name="age" class="text-field" type="text" data-validate="required|int|min:13|max:25" placeholder="data-validate='required | int | min:13 | max:25'" />
                   </div>
 
                   <div class="form-actions">
