@@ -7,7 +7,7 @@
  */
 export default function required(value, params, validate) {
   if (value.length === 0) {
-    validate(true, 'The :attribute is required.');
+    return validate(false, 'The :attribute is required.');
   }
 
   validate(true);
