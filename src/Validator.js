@@ -12,10 +12,17 @@ class Validator {
    */
   constructor() {
     /**
-     * Array of registered rules.
+     * Dictionary of registered rules.
      * @type {Object}
      */
     this.rules = {};
+
+    /**
+     * The validation rules that imply the field is required
+     * when submitting the form.
+     * @type {Array}
+     */
+    this.required = [];
   }
 
   /**
@@ -100,7 +107,7 @@ class Validator {
    * Returns a promise to validate a given field.
    * @param {String} name - Field name
    * @param {String} value  - Value to be validated
-   * @param {String|Array} rules - Rules to use for validation
+   * @param {String|Object} rules - Rules to use for validation
    * @returns {Promise} Promise to validate given field
    */
   validate(name, value, rules) {
@@ -148,10 +155,15 @@ class Validator {
       // Only validate fields with a `rules` option
       if (!field.rules) return;
 
-      // Only validate blank fields if `validateBlank` is set
-      if (field.value === '' && !validateBlank) return;
+      // Convert `rules` to an object.
+      const parsedRules = this.parseRules(field.rules);
+      const hasRequiredRule = parsedRules.some(rule => this.required.indexOf(rule.name) >= 0);
 
-      ready = this.validate(field.name, field.value, field.rules)
+      // Only validate blank fields if rule is implicity required
+      // and the `validateBlank` parameter is set.
+      if (field.value === '' && !(validateBlank && hasRequiredRule)) return;
+
+      ready = this.validate(field.name, field.value, parsedRules)
         .then((result) => accumulator.push(result));
     });
 

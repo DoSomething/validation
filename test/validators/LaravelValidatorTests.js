@@ -16,22 +16,22 @@ describe('LaravelValidator', () => {
     let form = [
       {
         name: 'age',
-        rules: 'max:22|min:18',
+        rules: 'required|max:22|min:18',
         value: '21',
       },
       {
         name: 'animal',
-        rules: 'min:4',
+        rules: 'required|min:4',
         value: 'dog',
       },
       {
         name: 'good_string',
         rules: 'min:4',
-        value: 'hello',
+        value: '',
       },
       {
         name: 'quantity',
-        rules: 'min:4',
+        rules: 'required|min:4',
         value: '1',
       },
     ];
@@ -48,11 +48,6 @@ describe('LaravelValidator', () => {
           name: 'animal',
           success: false,
           message: 'The animal must be 4 or greater.',
-        },
-        {
-          name: 'good_string',
-          success: true,
-          message: '',
         },
         {
           name: 'quantity',
