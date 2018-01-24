@@ -347,7 +347,7 @@ $(function() {
 });
 
 // Export public API:
-export default {
+module.exports = {
   prepareFields: prepareFields,
   registerValidation: registerValidation,
   registerValidationFunction: registerValidationFunction,
