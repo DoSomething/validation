@@ -17,7 +17,9 @@
     "prepublish": "npm run build",
     "clean": "rm -rf dist",
     "start": "npm run clean && webpack",
-    "build": "npm run clean && NODE_ENV=production webpack && babel src --out-dir lib"
+    "build": "npm run clean && npm run build:js && npm run build:css",
+    "build:js": "NODE_ENV=production webpack && babel src --out-dir lib",
+    "build:css": "node-sass src/validation.scss dist/validation.css"
   },
   "dependencies": {
     "jquery": "^3.0.0"
